@@ -27,25 +27,26 @@ use Cake\Controller\Controller;
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+    public $user_id;
+
     /*
      * Bootstrap helpers
      */
-
-public $helpers = [
-    'Html' => [
-        'className' => 'Bootstrap3.BootstrapHtml'
-    ],
-    'Form' => [
-        'className' => 'Bootstrap3.BootstrapForm'
-    ],
-    'Paginator' => [
-        'className' => 'Bootstrap3.BootstrapPaginator'
-    ],
-    'Modal' => [
-        'className' => 'Bootstrap3.BootstrapModal'
-    ]
-];
-    
+    public $helpers = [
+        'Html' => [
+            'className' => 'Bootstrap3.BootstrapHtml'
+        ],
+        'Form' => [
+            'className' => 'Bootstrap3.BootstrapForm'
+        ],
+        'Paginator' => [
+            'className' => 'Bootstrap3.BootstrapPaginator'
+        ],
+        'Modal' => [
+            'className' => 'Bootstrap3.BootstrapModal'
+        ]
+    ];
 
     /**
      * Initialization hook method.
@@ -55,7 +56,34 @@ public $helpers = [
      * @return void
      */
     public function initialize() {
+
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'authenticate' => [
+                'Form' => [
+                    'fields' => ['username' => 'username', 'password' => 'password']
+                ]
+            ],
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ]
+        ]);
+    }
+
+    public function beforeFilter(\Cake\Event\Event $event) {
+        parent::beforeFilter($event);
+
+        $this->Auth->allow(['index', 'view', 'dashboard', 'register']);
+
+        $userdata = $this->Auth->user();
+
+        $this->user_id = $userdata['id'];
+
+        if (!empty($this->user_id)) {
+            $this->set('user_id', $this->user_id);
+            $this->set('username', $this->Auth->user('username'));
+        }
     }
 
 }

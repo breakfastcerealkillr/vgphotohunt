@@ -15,10 +15,10 @@
 $cakeDescription = 'CakePHP: the rapid development php framework';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <?= $this->Html->charset() ?>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>
             <?= $cakeDescription ?>:
             <?= $this->fetch('title') ?>
@@ -30,7 +30,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <?= $this->Html->script('jquery') ?>
         <?= $this->Html->script('bootstrap') ?>
 
-        <?= $this->fetch('meta') ?>
+
         <?= $this->fetch('css') ?>
         <?= $this->fetch('script') ?>
     </head>
@@ -38,7 +38,20 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <div class="page-header">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>VG Photo Hunt</h1>
+                    <h1><?= $this->Html->link('VG Photo Hunt', '/') ?></h1>
+                    <span class="pull-right">
+                        <?php if (isset($user_id)): ?>
+                            Hi, <?= $username ?>!
+                            <br>
+                            <?= $this->Html->link('Profile', ['controller' => 'users', 'action' => 'profile']) ?>
+                            <br>
+                            <?= $this->Html->link('Logout', ['controller' => 'users', 'action' => 'logout']) ?>
+                        <?php else: ?>
+                            <?= $this->Html->link('Login', ['controller' => 'users', 'action' => 'login']) ?>
+                            <br>
+                            <?= $this->Html->link('Register', ['controller' => 'users', 'action' => 'register']) ?>
+                        <?php endif ?>
+                    </span>
                 </div>
             </div>
         </div>

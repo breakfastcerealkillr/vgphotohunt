@@ -8,8 +8,7 @@ use App\Controller\AppController;
  *
  * @property \App\Model\Table\SetsTable $Sets
  */
-class SetsController extends AppController
-{
+class SetsController extends AppController {
 
     /**
      * Index method
@@ -34,8 +33,11 @@ class SetsController extends AppController
      */
     public function view($id = null)
     {
+        
+        $this->loadModel('Pictures');
+        
         $set = $this->Sets->get($id, [
-            'contain' => ['Games', 'WinnerUsers', 'Pictures', 'Upvotes']
+            'contain' => ['Pictures', 'Upvotes']
         ]);
         $this->set('set', $set);
         $this->set('_serialize', ['set']);
@@ -58,8 +60,7 @@ class SetsController extends AppController
                 $this->Flash->error('The set could not be saved. Please, try again.');
             }
         }
-        $games = $this->Sets->Games->find('list', ['limit' => 200]);
-        $winnerUsers = $this->Sets->WinnerUsers->find('list', ['limit' => 200]);
+
         $this->set(compact('set', 'games', 'winnerUsers'));
         $this->set('_serialize', ['set']);
     }

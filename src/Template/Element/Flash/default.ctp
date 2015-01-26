@@ -1,7 +1,5 @@
-<?php
-$class = 'message';
-if (!empty($params['class'])) {
-    $class .= ' ' . $params['class'];
-}
-?>
-<div class="<?= h($class) ?>"><?= h($message) ?></div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="alert alert-success"><?= h($message) ?></div>
+    </div>
+</div>

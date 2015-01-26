@@ -50,11 +50,6 @@ Router::scope('/', function ($routes) {
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'dashboard']);
 
     /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
-    /**
      * Connect catchall routes for all controllers.
      *
      * Using the argument `InflectedRoute`, the `fallbacks` method is a shortcut for
