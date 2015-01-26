@@ -26,13 +26,7 @@ class SetsTable extends Table
         $this->belongsTo('Games', [
             'foreignKey' => 'game_id'
         ]);
-        $this->belongsTo('WinnerUsers', [
-            'foreignKey' => 'winner_user_id'
-        ]);
         $this->hasMany('Pictures', [
-            'foreignKey' => 'set_id'
-        ]);
-        $this->hasMany('Upvotes', [
             'foreignKey' => 'set_id'
         ]);
     }
@@ -79,7 +73,7 @@ class SetsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['game_id'], 'Games'));
-        $rules->add($rules->existsIn(['winner_user_id'], 'WinnerUsers'));
         return $rules;
     }
+    
 }

@@ -5,6 +5,9 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
+use Cake\I18n\Time;
+use Cake\Filesystem\File;
 
 /**
  * Pictures Model
@@ -43,25 +46,25 @@ class PicturesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create')
-            ->add('user_id', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('user_id', 'create')
-            ->notEmpty('user_id')
-            ->add('set_id', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('set_id', 'create')
-            ->notEmpty('set_id')
-            ->requirePresence('guid', 'create')
-            ->notEmpty('guid')
-            ->add('date', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('date', 'create')
-            ->notEmpty('date');
-
-        return $validator;
-    }
+//    public function validationDefault(Validator $validator)
+//    {
+//        $validator
+//            ->add('id', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('id', 'create')
+//            ->add('user_id', 'valid', ['rule' => 'numeric'])
+//            ->requirePresence('user_id', 'create')
+//            ->notEmpty('user_id')
+//            ->add('set_id', 'valid', ['rule' => 'numeric'])
+//            ->requirePresence('set_id', 'create')
+//            ->notEmpty('set_id')
+//            ->requirePresence('guid', 'create')
+//            ->notEmpty('guid')
+//            ->add('date', 'valid', ['rule' => 'datetime'])
+//            ->requirePresence('date', 'create')
+//            ->notEmpty('date');
+//
+//        return $validator;
+//    }
 
     /**
      * Returns a rules checker object that will be used for validating
@@ -75,5 +78,22 @@ class PicturesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['set_id'], 'Sets'));
         return $rules;
+    }
+    
+    public function beforeSave($event, $entity) {
+        
+        $entity->guid = Text::uuid();
+        $entity->date = Time::now();
+        
+        debug($entity->file['tmp_name']);die;
+        
+        $temp_file = new File($entity->file['tmp_name']);
+        $temp_file->read();
+        
+        $file = new File('webroot/pictures/' . $entity->guid . '.png', true, 0644);
+        $file->write($temp_file);
+
+        return true;
+
     }
 }

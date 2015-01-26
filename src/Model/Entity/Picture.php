@@ -23,5 +23,6 @@ class Picture extends Entity
         'set' => true,
         'picture_comments' => true,
         'upvotes' => true,
+        'file' => true
     ];
 }

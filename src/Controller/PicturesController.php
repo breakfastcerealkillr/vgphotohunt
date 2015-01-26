@@ -53,15 +53,11 @@ class PicturesController extends AppController
             $picture = $this->Pictures->patchEntity($picture, $this->request->data);
             if ($this->Pictures->save($picture)) {
                 $this->Flash->success('The picture has been saved.');
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->referer());
             } else {
                 $this->Flash->error('The picture could not be saved. Please, try again.');
             }
         }
-        $users = $this->Pictures->Users->find('list', ['limit' => 200]);
-        $sets = $this->Pictures->Sets->find('list', ['limit' => 200]);
-        $this->set(compact('picture', 'users', 'sets'));
-        $this->set('_serialize', ['picture']);
     }
 
     /**

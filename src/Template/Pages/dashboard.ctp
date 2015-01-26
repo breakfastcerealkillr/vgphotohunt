@@ -4,7 +4,10 @@
             <table class="table">
                 <thead>
                 <th>
-                    Name
+                    Game
+                </th>
+                <th>
+                    Set Name
                 </th>
                 <th>
                     Description
@@ -27,6 +30,7 @@
                 </thead>
                 <?php foreach ($sets as $set) : ?>
                     <tr>
+                        <td><?= $set->game->name ?></td>
                         <td><?= $this->Html->link($set->name, ['controller' => 'sets', 'action' => 'view', $set->id]) ?></td>
                         <td><?= $set->description ?></td>
                         <td><?= $set->set_start_date ?></td>
