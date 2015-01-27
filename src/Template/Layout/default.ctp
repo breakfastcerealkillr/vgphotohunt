@@ -12,7 +12,7 @@
  * @since         0.10.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-$cakeDescription = 'CakePHP: the rapid development php framework';
+$cakeDescription = 'VG Photo Hunt';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,5 +61,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <div class="row">
             <?= $this->fetch('content') ?>
         </div>
+        <?= $this->Html->script('popovers') ?>
     </body>
 </html>

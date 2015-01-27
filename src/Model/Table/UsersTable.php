@@ -30,7 +30,7 @@ class UsersTable extends Table {
         $this->hasMany('Pictures', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Upvotes', [
+        $this->hasMany('Votes', [
             'foreignKey' => 'user_id'
         ]);
     }
@@ -64,7 +64,6 @@ class UsersTable extends Table {
     public function buildRules(RulesChecker $rules) {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
-        $rules->add($rules->existsIn(['steam_id'], 'Steams'));
         return $rules;
     }
 

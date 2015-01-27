@@ -26,6 +26,6 @@ class Set extends Entity
         'game' => true,
         'winner_user' => true,
         'pictures' => true,
-        'upvotes' => true,
+        'votes' => true,
     ];
 }
