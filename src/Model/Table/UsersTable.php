@@ -8,6 +8,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
 
 /**
  * Users Model
@@ -65,6 +66,60 @@ class UsersTable extends Table {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
         return $rules;
+    }
+
+    public function beforeSave($event, $entity) {
+
+        if (!empty($entity->avatar)) {
+            foreach (glob('avatars/' . $entity->avatar . '*') as $file) {
+                unlink($file);
+                debug($file);
+            }
+        }
+
+        if (empty($entity->file['tmp_name'])) {
+            return true;
+        }
+
+        $entity->avatar = Text::uuid();
+
+        $full_image_name = 'avatars/' . $entity->avatar . '.png';
+
+        if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
+            return false;
+        }
+
+        $thumb100 = 'avatars/' . $entity->avatar . '_100.png';
+        $thumb60 = 'avatars/' . $entity->avatar . '_60.png';
+
+        $this->scale($full_image_name, $thumb100, 100);
+        $this->scale($full_image_name, $thumb60, 60);
+
+        return true;
+    }
+
+    private function scale($filename, $save_path, $size) {
+
+        $width = $size;
+        $height = $size;
+
+        list($width_orig, $height_orig) = getimagesize($filename);
+
+        $ratio_orig = $width_orig / $height_orig;
+
+        if ($width / $height > $ratio_orig) {
+            $width = $height * $ratio_orig;
+        } else {
+            $height = $width / $ratio_orig;
+        }
+
+
+        $image_p = imagecreatetruecolor($width, $height);
+        $image = imagecreatefrompng($filename);
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+
+
+        return imagepng($image_p, $save_path, 0);
     }
 
 }

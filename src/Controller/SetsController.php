@@ -37,7 +37,7 @@ class SetsController extends AppController {
         $this->loadModel('Pictures');
         
         $set = $this->Sets->get($id, [
-            'contain' => ['Pictures']
+            'contain' => ['Pictures.Users']
         ]);
         $this->set('set', $set);
         $this->set('_serialize', ['set']);

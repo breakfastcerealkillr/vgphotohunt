@@ -40,10 +40,10 @@ $cakeDescription = 'VG Photo Hunt';
                 <div class="col-md-12">
                     <h1><?= $this->Html->link('VG Photo Hunt', '/') ?></h1>
                     <span class="pull-right">
-                        <?php if (isset($user_id)): ?>
+                        <?php if ($loggedin): ?>
                             Hi, <?= $username ?>!
                             <br>
-                            <?= $this->Html->link('Profile', ['controller' => 'users', 'action' => 'profile']) ?>
+                            <?= $this->Html->link('Profile', ['controller' => 'users', 'action' => 'view', $user_id]) ?>
                             <br>
                             <?= $this->Html->link('Logout', ['controller' => 'users', 'action' => 'logout']) ?>
                         <?php else: ?>
@@ -62,5 +62,6 @@ $cakeDescription = 'VG Photo Hunt';
             <?= $this->fetch('content') ?>
         </div>
         <?= $this->Html->script('popovers') ?>
+        <div style="margin-bottom: 100px;"></div>
     </body>
 </html>

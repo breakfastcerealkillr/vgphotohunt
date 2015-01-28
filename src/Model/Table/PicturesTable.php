@@ -8,7 +8,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Text;
 use Cake\I18n\Time;
-use Cake\Filesystem\File;
 
 /**
  * Pictures Model

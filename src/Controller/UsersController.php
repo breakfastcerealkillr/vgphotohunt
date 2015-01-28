@@ -30,11 +30,17 @@ class UsersController extends AppController {
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function view($id = null) {
+
+        $this->loadModel('Pictures');
+
         $user = $this->Users->get($id, [
-            'contain' => ['Steams']
+            'contain' => ['Pictures']
         ]);
         $this->set('user', $user);
         $this->set('_serialize', ['user']);
+
+        $pictures_count = $this->Pictures->find()->where(['Pictures.user_id' => $id])->count();
+        $this->set('pictures_count', $pictures_count);
     }
 
     /**
@@ -42,21 +48,21 @@ class UsersController extends AppController {
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function add() {
-        $user = $this->Users->newEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Flash->success('The user has been saved.');
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error('The user could not be saved. Please, try again.');
-            }
-        }
-        $steams = $this->Users->Steams->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'steams'));
-        $this->set('_serialize', ['user']);
-    }
+//    public function add() {
+//        $user = $this->Users->newEntity();
+//        if ($this->request->is('post')) {
+//            $user = $this->Users->patchEntity($user, $this->request->data);
+//            if ($this->Users->save($user)) {
+//                $this->Flash->success('The user has been saved.');
+//                return $this->redirect(['action' => 'index']);
+//            } else {
+//                $this->Flash->error('The user could not be saved. Please, try again.');
+//            }
+//        }
+//        $steams = $this->Users->Steams->find('list', ['limit' => 200]);
+//        $this->set(compact('user', 'steams'));
+//        $this->set('_serialize', ['user']);
+//    }
 
     /**
      * Edit method
@@ -66,21 +72,22 @@ class UsersController extends AppController {
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null) {
-        $user = $this->Users->get($id, [
-            'contain' => []
-        ]);
+
+        if ($id != $this->user_id) {
+            return $this->redirect([$this->user_id]);
+        }
+
+        $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->success('The user has been saved.');
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success('Saved!');
+                return $this->redirect(['action' => 'view', $id]);
             } else {
                 $this->Flash->error('The user could not be saved. Please, try again.');
             }
         }
-        $steams = $this->Users->Steams->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'steams'));
-        $this->set('_serialize', ['user']);
+        $this->set('user', $user);
     }
 
     /**
@@ -102,7 +109,7 @@ class UsersController extends AppController {
     }
 
     public function login() {
-        
+
         if (isset($this->user_id)) {
             return $this->redirect('/');
         }
@@ -157,6 +164,26 @@ class UsersController extends AppController {
                 $this->Flash->error('The user could not be saved. Please, try again.');
             }
         }
+    }
+
+    public function deleteAvatar() {
+
+        $user = $this->Users->get($this->user_id);
+
+        foreach (glob('avatars/' . $user->avatar . '*') as $file) {
+            unlink($file);
+            debug($file);
+        }
+
+        $user->avatar = null;
+
+        if ($this->Users->save($user)) {
+            $this->Flash->success('Deleted!');
+        } else {
+            $this->Flash->success('Failed!');
+        }
+
+        return $this->redirect($this->referer());
     }
 
 }

@@ -35,6 +35,7 @@ class User extends Entity {
         'steam_id' => true,
         'avatar' => true,
         'steam' => true,
+        'file' => true
     ];
 
     protected function _setPassword($password) {

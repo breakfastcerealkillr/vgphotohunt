@@ -34,7 +34,7 @@ class PicturesController extends AppController {
     public function view($id = null) {
 
         $picture = $this->Pictures->get($id, [
-            'contain' => ['Users', 'Sets', 'PictureComments', 'Votes']
+            'contain' => ['Users', 'Sets', 'PictureComments.Users', 'Votes']
         ]);
 
         $this->set('picture', $picture);

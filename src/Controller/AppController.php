@@ -83,6 +83,11 @@ class AppController extends Controller {
         if (!empty($this->user_id)) {
             $this->set('user_id', $this->user_id);
             $this->set('username', $this->Auth->user('username'));
+            $this->set('loggedin', true);
+        } else {
+            $this->set('loggedin', false);
+            $this->set('username', false);
+            $this->set('user_id', false);
         }
     }
 

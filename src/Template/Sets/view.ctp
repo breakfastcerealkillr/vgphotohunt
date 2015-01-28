@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-4">
-        <h2><?= $set->name ?></h2>
+        <h3><?= $set->name ?></h3>
     </div>
 </div>
 <div class="row">
@@ -33,6 +33,7 @@
                 'alt' => $picture->guid,
                 'url' => ['controller' => 'pictures', 'action' => 'view', $picture->id]
             ]) ?>
+            User: <?= $this->Html->link($picture->user->username, ['controller' => 'users', 'action' => 'view', $picture->user->id]) ?>
 
         <?php endforeach; ?>
     </div>
