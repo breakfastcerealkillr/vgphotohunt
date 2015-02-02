@@ -56,9 +56,8 @@ $cakeDescription = 'VG Photo Hunt';
             </div>
         </div>
 
-        <?= $this->Flash->render() ?>
-
-        <div class="row">
+        <div class="container">
+            <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>
         <?= $this->Html->script('popovers') ?>

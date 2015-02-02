@@ -10,7 +10,8 @@
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "dev-master",
         "cakephp/plugin-installer": "*",
-	"holt59/cakephp3-bootstrap3-helpers": "dev-master"
+	"holt59/cakephp3-bootstrap3-helpers": "dev-master",
+        "phpunit/phpunit": "*"
     },
     "require-dev": {
         "d11wtq/boris": "1.0.*",

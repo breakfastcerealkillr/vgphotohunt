@@ -32,11 +32,7 @@ class PicturesController extends AppController {
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function view($id = null) {
-
-        $picture = $this->Pictures->get($id, [
-            'contain' => ['Users', 'Sets', 'PictureComments.Users', 'Votes']
-        ]);
-
+        $picture = $this->Pictures->viewWithStatus($id);
         $this->set('picture', $picture);
     }
 

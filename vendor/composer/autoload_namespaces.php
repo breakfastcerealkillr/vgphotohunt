@@ -13,6 +13,7 @@ return array(
     'Symfony\\Component\\ClassLoader\\' => array($vendorDir . '/symfony/class-loader'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Phinx' => array($vendorDir . '/robmorgan/phinx/src'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src'),
     'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
     'Carbon' => array($vendorDir . '/nesbot/carbon/src'),

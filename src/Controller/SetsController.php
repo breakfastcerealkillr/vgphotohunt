@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
@@ -15,13 +16,13 @@ class SetsController extends AppController {
      *
      * @return void
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Games', 'WinnerUsers']
-        ];
-        $this->set('sets', $this->paginate($this->Sets));
-        $this->set('_serialize', ['sets']);
+    public function index() {
+
+//        $this->paginate = [
+//            'contain' => ['Games']
+//        ];
+//
+        $this->set('sets', $this->Sets->findWithStatus());
     }
 
     /**
@@ -31,16 +32,15 @@ class SetsController extends AppController {
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        
+    public function view($id = null) {
+
         $this->loadModel('Pictures');
-        
-        $set = $this->Sets->get($id, [
-            'contain' => ['Pictures.Users']
-        ]);
+
+        $set = $this->Sets->viewWithStatus($id);
         $this->set('set', $set);
-        $this->set('_serialize', ['set']);
+
+        $completed = $this->Sets->completed($id, $this->user_id);
+        $this->set('completed', $completed);
     }
 
     /**
@@ -48,8 +48,7 @@ class SetsController extends AppController {
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
+    public function add() {
         $set = $this->Sets->newEntity();
         if ($this->request->is('post')) {
             $set = $this->Sets->patchEntity($set, $this->request->data);
@@ -72,8 +71,7 @@ class SetsController extends AppController {
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
+    public function edit($id = null) {
         $set = $this->Sets->get($id, [
             'contain' => []
         ]);
@@ -99,8 +97,7 @@ class SetsController extends AppController {
      * @return void Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function delete($id = null)
-    {
+    public function delete($id = null) {
         $this->request->allowMethod(['post', 'delete']);
         $set = $this->Sets->get($id);
         if ($this->Sets->delete($set)) {
@@ -110,4 +107,5 @@ class SetsController extends AppController {
         }
         return $this->redirect(['action' => 'index']);
     }
+
 }

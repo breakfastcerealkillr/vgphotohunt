@@ -44,17 +44,16 @@ class PicturesTable extends Table {
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator) {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create')
-            ->add('user_id', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('user_id', 'create')
-            ->notEmpty('user_id')
-            ->add('set_id', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('set_id', 'create')
-            ->notEmpty('set_id');
+                ->add('id', 'valid', ['rule' => 'numeric'])
+                ->allowEmpty('id', 'create')
+                ->add('user_id', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('user_id', 'create')
+                ->notEmpty('user_id')
+                ->add('set_id', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('set_id', 'create')
+                ->notEmpty('set_id');
 
         return $validator;
     }
@@ -116,6 +115,37 @@ class PicturesTable extends Table {
 
 
         return imagepng($image_p, $save_path, 0);
+    }
+
+    public function viewWithStatus($id) {
+
+        if (!isset($id)) {
+            return false;
+        }
+
+        $query = $this
+                ->find()
+                ->contain(['Users', 'Sets', 'PictureComments.Users', 'Votes'])
+                ->where(['Pictures.id' => $id])
+                ->first();
+
+        $now = Time::parse('now');
+
+        if ($query->set->set_start_date <= $now && $query->set->set_end_date >= $now) {
+            $query->set->set_open = true;
+            $query->set->status = "Game Open";
+        } else {
+            $query->set->set_open = false;
+        }
+
+        if ($query->set->voting_start_date <= $now && $query->set->voting_end_date >= $now) {
+            $query->set->voting_open = true;
+            $query->set->status = "Voting Open";
+        } else {
+            $query->set->voting_open = false;
+        }
+
+        return $query;
     }
 
 }

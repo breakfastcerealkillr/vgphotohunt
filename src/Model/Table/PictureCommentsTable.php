@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\I18n\Time;
 
 /**
  * PictureComments Model
@@ -70,6 +71,13 @@ class PictureCommentsTable extends Table {
         $rules->add($rules->existsIn(['picture_id'], 'Pictures'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
+    }
+
+    public function beforeSave($event, $entity) {
+
+        $entity->timestamp = Time::now();
+
+        return true;
     }
 
 }

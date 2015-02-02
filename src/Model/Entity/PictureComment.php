@@ -20,5 +20,6 @@ class PictureComment extends Entity
         'comment' => true,
         'picture' => true,
         'user' => true,
+        'timestamp' => true
     ];
 }

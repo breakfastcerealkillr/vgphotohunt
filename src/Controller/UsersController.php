@@ -119,6 +119,7 @@ class UsersController extends AppController {
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
+                $this->Users->lastLogin($user['id']);
                 $this->Flash->success('Logged In!');
                 return $this->redirect('/');
             }

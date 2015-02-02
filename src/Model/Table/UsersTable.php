@@ -9,6 +9,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Text;
+use Cake\I18n\Time;
 
 /**
  * Users Model
@@ -70,10 +71,9 @@ class UsersTable extends Table {
 
     public function beforeSave($event, $entity) {
 
-        if (!empty($entity->avatar)) {
+        if (!empty($entity->file['name'])) {
             foreach (glob('avatars/' . $entity->avatar . '*') as $file) {
                 unlink($file);
-                debug($file);
             }
         }
 
@@ -120,6 +120,23 @@ class UsersTable extends Table {
 
 
         return imagepng($image_p, $save_path, 0);
+    }
+
+    public function lastLogin($user_id = null) {
+
+        if (!$user_id) {
+            return false;
+        }
+
+        $user = $this->get($user_id);
+
+        $user->last_login = Time::now();
+
+        if ($this->save($user)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

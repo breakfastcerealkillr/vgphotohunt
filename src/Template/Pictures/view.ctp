@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-8">
         <?= $this->Html->image("/pictures/{$picture->guid}.png", ['class' => 'img-responsive']) ?>
-        <?php if ($picture->user_id == $user_id): ?>
+        <?php if ($picture->user_id == $user_id && $picture->set->set_open): ?>
             <?= $this->Html->link('Delete', ['action' => 'delete', $picture->id], ['class' => 'btn btn-xs btn-danger']) ?>
         <?php endif ?>
     </div>
@@ -28,6 +28,7 @@
                             <img src="/avatars/default_60.png">
                         <?php endif ?>
                         <?= $comment->user->username ?>
+                        <?= $this->Time->format($comment->timestamp, null, null, $comment->user->timezone) ?>
                     </td>
                     <td>
                         <?= $comment->comment ?>
