@@ -11,6 +11,12 @@ use App\Controller\AppController;
  */
 class SetsController extends AppController {
 
+    public function beforeFilter(\Cake\Event\Event $event) {
+        parent::beforeFilter($event);
+
+        $this->Auth->allow();
+    }
+
     /**
      * Index method
      *
@@ -18,10 +24,6 @@ class SetsController extends AppController {
      */
     public function index() {
 
-//        $this->paginate = [
-//            'contain' => ['Games']
-//        ];
-//
         $this->set('sets', $this->Sets->findWithStatus());
     }
 
@@ -43,69 +45,25 @@ class SetsController extends AppController {
         $this->set('completed', $completed);
     }
 
-    /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
-     */
-    public function add() {
-        $set = $this->Sets->newEntity();
-        if ($this->request->is('post')) {
-            $set = $this->Sets->patchEntity($set, $this->request->data);
-            if ($this->Sets->save($set)) {
-                $this->Flash->success('The set has been saved.');
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error('The set could not be saved. Please, try again.');
-            }
-        }
+    public function open($game = null) {
 
-        $this->set(compact('set', 'games', 'winnerUsers'));
-        $this->set('_serialize', ['set']);
+        $this->set('sets', $this->Sets->findOpenSets($game));
+
+        $this->render('index');
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Set id.
-     * @return void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null) {
-        $set = $this->Sets->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $set = $this->Sets->patchEntity($set, $this->request->data);
-            if ($this->Sets->save($set)) {
-                $this->Flash->success('The set has been saved.');
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error('The set could not be saved. Please, try again.');
-            }
-        }
-        $games = $this->Sets->Games->find('list', ['limit' => 200]);
-        $winnerUsers = $this->Sets->WinnerUsers->find('list', ['limit' => 200]);
-        $this->set(compact('set', 'games', 'winnerUsers'));
-        $this->set('_serialize', ['set']);
+    public function openvotes($game = null) {
+
+        $this->set('sets', $this->Sets->findOpenVotes($game));
+
+        $this->render('index');
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Set id.
-     * @return void Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function delete($id = null) {
-        $this->request->allowMethod(['post', 'delete']);
-        $set = $this->Sets->get($id);
-        if ($this->Sets->delete($set)) {
-            $this->Flash->success('The set has been deleted.');
-        } else {
-            $this->Flash->error('The set could not be deleted. Please, try again.');
-        }
-        return $this->redirect(['action' => 'index']);
+    public function archives() {
+
+        $this->set('sets', $this->Sets->findWithStatus());
+
+        $this->render('index');
     }
 
 }

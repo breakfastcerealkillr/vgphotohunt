@@ -26,6 +26,7 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->Html->meta('icon') ?>
 
         <?= $this->Html->css('bootstrap.css') ?>
+        <?= $this->Html->css('vgphotohunt.css') ?>
 
         <?= $this->Html->script('jquery') ?>
         <?= $this->Html->script('bootstrap') ?>
@@ -35,28 +36,41 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->fetch('script') ?>
     </head>
     <body>
-        <div class="page-header">
+        <div class="page-header cc">
             <div class="row">
                 <div class="col-md-12">
-                    <h1><?= $this->Html->link('VG Photo Hunt', '/') ?></h1>
-                    <span class="pull-right">
-                        <?php if ($loggedin): ?>
-                            Hi, <?= $username ?>!
-                            <br>
-                            <?= $this->Html->link('Profile', ['controller' => 'users', 'action' => 'view', $user_id]) ?>
-                            <br>
-                            <?= $this->Html->link('Logout', ['controller' => 'users', 'action' => 'logout']) ?>
-                        <?php else: ?>
-                            <?= $this->Html->link('Login', ['controller' => 'users', 'action' => 'login']) ?>
-                            <br>
-                            <?= $this->Html->link('Register', ['controller' => 'users', 'action' => 'register']) ?>
-                        <?php endif ?>
-                    </span>
+                    <div class="Grid grid-bottom">
+                        <div class="Grid-cell grid-1of2 logoside">
+                            <div class="logobg">
+                                <?= $this->Html->image('logo.png', ['class' => 'logoimg', 'alt' => 'logo', 'url' => ['controller' => 'pages', 'action' => 'index']]) ?>
+                            </div>
+                        </div>
+                        <div class="Grid-cell grid-1of2 rightside">
+                            <div class="logindiv">
+                                <?php if ($loggedin): ?> 
+                                    <?= $this->Html->image('header_login.png', ['alt' => 'logout', 'url' => ['controller' => 'users', 'action' => 'logout']]) ?>
+                                <?php else: ?>
+                                    <?= $this->Html->image('header_login.png', ['alt' => 'login', 'url' => ['controller' => 'users', 'action' => 'login']]) ?>
+                                <?php endif; ?>
+                            </div>
+                            <div class="navcontainer">
+                                <div class="hbuttondiv">
+                                    <?= $this->Html->image('header_what.png', ['class' => 'hbutton', 'alt' => 'about', 'url' => ['controller' => 'pages', 'action' => 'what']]) ?>
+                                </div>
+                                <div class="hbuttondiv">
+                                    <?= $this->Html->image('header_join.png', ['class' => 'hbutton', 'alt' => 'register', 'url' => ['controller' => 'users', 'action' => 'register']]) ?>
+                                </div>
+                                <div class="hbuttondiv">
+                                    <?= $this->Html->image('header_vote.png', ['class' => 'hbutton', 'alt' => 'vote', 'url' => ['controller' => 'sets', 'action' => 'openvotes']]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="container">
+        <div class="container maincontainer">
             <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>

@@ -6,7 +6,7 @@
             <img src="/avatars/default_100.png">
         <?php else: ?>
             <img src="/avatars/<?= $user->avatar ?>_100.png">
-            <?= $this->Html->link('Delete', ['action' => 'deleteAvatar'], ['class' => 'btn btn-xs btn-danger']) ?>
+            <?= $this->Html->link('Delete', ['action' => 'deleteAvatar'], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']) ?>
         <?php endif ?>
         <?= $this->Form->hidden('Users.id', ['default' => $user->id]) ?>
         <?= $this->Form->hidden('Users.avatar', ['default' => $user->avatar]) ?>

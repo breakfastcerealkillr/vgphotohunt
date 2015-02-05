@@ -85,6 +85,7 @@ class AppController extends Controller {
             $this->set('username', $this->Auth->user('username'));
             $this->set('loggedin', true);
             $this->set('timezone', $this->Auth->user('timezone'));
+            $this->set('avatar', $this->Auth->user('avatar'));
         } else {
             $this->set('loggedin', false);
             $this->set('username', false);

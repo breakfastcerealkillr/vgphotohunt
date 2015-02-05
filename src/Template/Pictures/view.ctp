@@ -9,6 +9,11 @@
         <?php if ($picture->user_id == $user_id && $picture->set->set_open): ?>
             <?= $this->Html->link('Delete', ['action' => 'delete', $picture->id], ['class' => 'btn btn-xs btn-danger']) ?>
         <?php endif ?>
+        <?php if ($picture->set->voting_open): ?>
+            <button type="button" class="btn btn-warning votebutton" id="<?= $picture->id ?>">
+                Vote!
+            </button>
+        <?php endif ?>
     </div>
 </div>
 <div class="row">
@@ -46,3 +51,15 @@
         <?php endif ?>
     </div>
 </div>
+<script>
+    
+$(document).ready(function() {
+    
+   $('.votebutton').on('click', function() {
+       $('.votebutton').attr('disabled', 'disabled');
+       $(this).text("I don't know what this should say, Brandon");
+   });
+    
+});
+
+</script>

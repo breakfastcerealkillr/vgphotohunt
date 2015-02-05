@@ -81,6 +81,65 @@ class SetsTable extends Table {
 
         $query->contain('Games');
 
+        $results = $this->statusParse($query);
+
+        return $results;
+    }
+
+    public function findOpenSets($game = null) {
+
+        $query = $this->find();
+
+        $query->contain('Games');
+
+        if (isset($game)) {
+            $query->where(['Games.name' => $game]);
+        }
+
+        $results = $this->statusParse($query);
+
+        $query->formatResults(function ($results) {
+            return $results->map(function ($row) {
+                        if (!$row['set_open']) {
+                            $row['hidden'] = true;
+                        }
+                        return $row;
+                    });
+        });
+
+        return $results;
+    }
+
+    public function findOpenVotes($game = null) {
+        
+        $query = $this->find();
+
+        $query->contain('Games');
+
+        if (isset($game)) {
+            $query->where(['Games.name' => $game]);
+        }
+
+        $results = $this->statusParse($query);
+
+        $query->formatResults(function ($results) {
+            return $results->map(function ($row) {
+                        if (!$row['voting_open']) {
+                            $row['hidden'] = true;
+                        }
+                        return $row;
+                    });
+        });
+
+        return $results;
+    }
+
+    private function statusParse($query) {
+
+        if (!isset($query)) {
+            return false;
+        }
+
         $query->formatResults(function (\Cake\Datasource\ResultSetInterface $results) {
             return $results->map(function ($row) {
 
@@ -88,7 +147,7 @@ class SetsTable extends Table {
 
                         if ($row['set_start_date'] <= $now && $row['set_end_date'] >= $now) {
                             $row['set_open'] = true;
-                            $row['status'] = "Game Open";
+                            $row['status'] = "Set Open";
                         } else {
                             $row['set_open'] = false;
                         }
@@ -141,6 +200,7 @@ class SetsTable extends Table {
     /*
      * This checks if the user has completed a set
      */
+
     public function completed($id, $user_id) {
 
         if (!isset($id) || !isset($user_id)) {

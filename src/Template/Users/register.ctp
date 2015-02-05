@@ -1,5 +1,6 @@
 <div class="row">
     <div class="col-md-4">
+        <h2>Register</h2>
         <?= $this->Form->create('user') ?>
         <?= $this->Form->input('username') ?>
         <?= $this->Form->input('password') ?>

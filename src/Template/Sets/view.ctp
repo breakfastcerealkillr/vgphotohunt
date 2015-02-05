@@ -34,7 +34,6 @@
             No pictures have be submitted for this set yet.
         <?php endif; ?>
         <?php foreach ($set->pictures as $picture): ?>
-
             <?=
             $this->Html->image("/pictures/{$picture->guid}_thumb.png", [
                 'alt' => $picture->guid,
@@ -43,6 +42,25 @@
             ?>
             User: <?= $this->Html->link($picture->user->username, ['controller' => 'users', 'action' => 'view', $picture->user->id]) ?>
 
+            <?php if ($set->voting_open): ?>
+                <button type="button" class="btn btn-warning votebutton" id="<?= $picture->id ?>">
+                    Vote!
+                </button>
+            <?php endif; ?>
+
         <?php endforeach; ?>
     </div>
 </div>
+<script>
+
+$(document).ready(function() {
+    
+   $('.votebutton').on('click', function() {
+       $('.votebutton').attr('disabled', 'disabled');
+       $('.votebutton').text('Voted');
+       $(this).text("I don't know what this should say, Brandon");
+   });
+    
+});
+
+</script>
