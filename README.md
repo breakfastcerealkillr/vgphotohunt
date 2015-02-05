@@ -8,3 +8,4 @@ them to the site. The community then decides on the best submission
 ## A Stranded Gaming Group Production
 
 https://www.facebook.com/groups/429216383863073/
+http://vgphotohunt.com/
