@@ -1,26 +1,10 @@
-# CakePHP Application Skeleton
+![vgphotohunt](https://raw.github.com/erichowey/vgphotohunt/master/webroot/img/logo.png)
 
-[![Build Status](https://api.travis-ci.org/cakephp/app.png)](https://travis-ci.org/cakephp/app)
-[![License](https://poser.pugx.org/cakephp/app/license.svg)](https://packagist.org/packages/cakephp/app)
+# VG Photo Hunt Source
 
-A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.0.
+A fantastic photo scavenger hunt game. You take photos in real life or in video games and submit 
+them to the site. The community then decides on the best submission
 
-This is an unstable repository and should be treated as an alpha.
+## A Stranded Gaming Group Production
 
-## Installation
-
-1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist -s dev cakephp/app [app_name]`.
-
-If Composer is installed globally, run
-```bash
-composer create-project --prefer-dist -s dev cakephp/app [app_name]
-```
-
-You should now be able to visit the path to where you installed the app and see
-the setup traffic lights.
-
-## Configuration
-
-Read and edit `config/app.php` and setup the 'Datasources' and any other
-configuration relevant for your application.
+https://www.facebook.com/groups/429216383863073/
