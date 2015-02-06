@@ -1,7 +1,11 @@
 <div class="sidebar">
     <div class="loggedin">
         <?php if ($loggedin): ?>
-            <?= $this->Html->image('../avatars/' . $avatar . '_60.png', ['class' => 'usericon', 'url' => ['controller' => 'users', 'action' => 'view', $user_id]]); ?>
+            <?php if ($avatar): ?>
+                <?= $this->Html->image('../avatars/' . $avatar . '_60.png', ['class' => 'usericon', 'url' => ['controller' => 'users', 'action' => 'view', $user_id]]); ?>
+            <?php else: ?>
+                <?= $this->Html->image('../avatars/default_60.png', ['class' => 'usericon', 'url' => ['controller' => 'users', 'action' => 'view', $user_id]]); ?>
+            <?php endif ?>
             <?= $this->Html->link($username, ['controller' => 'users', 'action' => 'view', $user_id], ['class' => 'h4 username']) ?>
             <p class="userstats">{?} Hunts</p>
             <p class="userstats">{?} Wins</p>

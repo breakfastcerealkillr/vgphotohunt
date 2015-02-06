@@ -109,3 +109,7 @@ div {border: 0px solid black;
 a {
     color: #eee;
 }
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
