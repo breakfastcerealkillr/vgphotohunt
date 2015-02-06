@@ -61,7 +61,7 @@ $cakeDescription = 'VG Photo Hunt';
                                     <?= $this->Html->image('header_join.png', ['class' => 'hbutton', 'alt' => 'register', 'url' => ['controller' => 'users', 'action' => 'register']]) ?>
                                 </div>
                                 <div class="hbuttondiv">
-                                    <?= $this->Html->image('header_vote.png', ['class' => 'hbutton', 'alt' => 'vote', 'url' => ['controller' => 'sets', 'action' => 'openvotes']]) ?>
+                                    <?= $this->Html->image('header_vote.png', ['class' => 'hbutton', 'alt' => 'vote', 'url' => ['controller' => 'hunts', 'action' => 'openvotes']]) ?>
                                 </div>
                             </div>
                         </div>

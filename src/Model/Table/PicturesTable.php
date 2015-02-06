@@ -27,8 +27,8 @@ class PicturesTable extends Table {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsTo('Sets', [
-            'foreignKey' => 'set_id'
+        $this->belongsTo('Marks', [
+            'foreignKey' => 'mark_id'
         ]);
         $this->hasMany('PictureComments', [
             'foreignKey' => 'picture_id'
@@ -51,9 +51,9 @@ class PicturesTable extends Table {
                 ->add('user_id', 'valid', ['rule' => 'numeric'])
                 ->requirePresence('user_id', 'create')
                 ->notEmpty('user_id')
-                ->add('set_id', 'valid', ['rule' => 'numeric'])
-                ->requirePresence('set_id', 'create')
-                ->notEmpty('set_id');
+                ->add('mark_id', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('mark_id', 'create')
+                ->notEmpty('mark_id');
 
         return $validator;
     }
@@ -67,7 +67,7 @@ class PicturesTable extends Table {
      */
     public function buildRules(RulesChecker $rules) {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['set_id'], 'Sets'));
+        $rules->add($rules->existsIn(['mark_id'], 'Marks'));
         return $rules;
     }
 
@@ -125,24 +125,24 @@ class PicturesTable extends Table {
 
         $query = $this
                 ->find()
-                ->contain(['Users', 'Sets', 'PictureComments.Users', 'Votes'])
+                ->contain(['Users', 'Hunts', 'Marks', 'PictureComments.Users', 'Votes'])
                 ->where(['Pictures.id' => $id])
                 ->first();
 
         $now = Time::parse('now');
 
-        if ($query->set->set_start_date <= $now && $query->set->set_end_date >= $now) {
-            $query->set->set_open = true;
-            $query->set->status = "Game Open";
+        if ($query->hunt->start_date <= $now && $query->hunt->end_date >= $now) {
+            $query->hunt->open = true;
+            $query->hunt->status = "Hunt Open";
         } else {
-            $query->set->set_open = false;
+            $query->hunt->open = false;
         }
 
-        if ($query->set->voting_start_date <= $now && $query->set->voting_end_date >= $now) {
-            $query->set->voting_open = true;
-            $query->set->status = "Voting Open";
+        if ($query->hunt->voting_start_date <= $now && $query->hunt->voting_end_date >= $now) {
+            $query->hunt->voting_open = true;
+            $query->hunt->status = "Voting Open";
         } else {
-            $query->set->voting_open = false;
+            $query->hunt->voting_open = false;
         }
 
         return $query;

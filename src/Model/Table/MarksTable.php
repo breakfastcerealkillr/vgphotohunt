@@ -1,15 +1,16 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Mark;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Games Model
+ * Marks Model
  */
-class GamesTable extends Table
+class MarksTable extends Table
 {
 
     /**
@@ -20,11 +21,11 @@ class GamesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('games');
-        $this->displayField('name');
+        $this->table('marks');
+        $this->displayField('id');
         $this->primaryKey('id');
-        $this->hasMany('Hunts', [
-            'foreignKey' => 'game_id'
+        $this->belongsTo('Hunts', [
+            'foreignKey' => 'hunt_id'
         ]);
     }
 
@@ -39,9 +40,13 @@ class GamesTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->add('hunt_id', 'valid', ['rule' => 'numeric'])
+            ->requirePresence('hunt_id', 'create')
+            ->notEmpty('hunt_id')
+            ->add('winner_user_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('winner_user_id');
 
         return $validator;
     }
+
 }

@@ -6,7 +6,7 @@ use Cake\ORM\Entity;
 /**
  * Set Entity.
  */
-class Set extends Entity
+class Hunt extends Entity
 {
 
     /**
@@ -22,7 +22,6 @@ class Set extends Entity
         'set_end_date' => true,
         'voting_start_date' => true,
         'voting_end_date' => true,
-        'winner_user_id' => true,
         'game' => true,
         'winner_user' => true,
         'pictures' => true,
