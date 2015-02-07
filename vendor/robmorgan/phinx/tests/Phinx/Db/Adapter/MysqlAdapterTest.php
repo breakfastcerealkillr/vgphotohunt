@@ -481,7 +481,8 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
         $table->addColumn('column1', 'text', array('limit' => MysqlAdapter::TEXT_LONG))
               ->save();
         $columns = $table->getColumns('t');
-        $this->assertEquals('longtext', $columns[1]->getType());
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('longtext', $sqlType['name']);
     }
 
     public function testMediumTextColumn()
@@ -490,16 +491,58 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
         $table->addColumn('column1', 'text', array('limit' => MysqlAdapter::TEXT_MEDIUM))
               ->save();
         $columns = $table->getColumns('t');
-        $this->assertEquals('mediumtext', $columns[1]->getType());
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('mediumtext', $sqlType['name']);
     }
 
     public function testTinyTextColumn()
     {
         $table = new \Phinx\Db\Table('t', array(), $this->adapter);
-        $table->addColumn('column1', 'text', array('limit' => MysqlAdapter::TEXT_SMALL))
+        $table->addColumn('column1', 'text', array('limit' => MysqlAdapter::TEXT_TINY))
               ->save();
         $columns = $table->getColumns('t');
-        $this->assertEquals('tinytext', $columns[1]->getType());
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('tinytext', $sqlType['name']);
+    }
+
+    public function testBigIntegerColumn()
+    {
+        $table = new \Phinx\Db\Table('t', array(), $this->adapter);
+        $table->addColumn('column1', 'integer', array('limit' => MysqlAdapter::INT_BIG))
+              ->save();
+        $columns = $table->getColumns('t');
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('bigint', $sqlType['name']);
+    }
+
+    public function testMediumIntegerColumn()
+    {
+        $table = new \Phinx\Db\Table('t', array(), $this->adapter);
+        $table->addColumn('column1', 'integer', array('limit' => MysqlAdapter::INT_MEDIUM))
+              ->save();
+        $columns = $table->getColumns('t');
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('mediumint', $sqlType['name']);
+    }
+
+    public function testSmallIntegerColumn()
+    {
+        $table = new \Phinx\Db\Table('t', array(), $this->adapter);
+        $table->addColumn('column1', 'integer', array('limit' => MysqlAdapter::INT_SMALL))
+              ->save();
+        $columns = $table->getColumns('t');
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('smallint', $sqlType['name']);
+    }
+
+    public function testTinyIntegerColumn()
+    {
+        $table = new \Phinx\Db\Table('t', array(), $this->adapter);
+        $table->addColumn('column1', 'integer', array('limit' => MysqlAdapter::INT_TINY))
+              ->save();
+        $columns = $table->getColumns('t');
+        $sqlType = $this->adapter->getSqlType($columns[1]->getType(), $columns[1]->getLimit());
+        $this->assertEquals('tinyint', $sqlType['name']);
     }
 
     public function testDropColumn()
@@ -532,7 +575,10 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
               ->addColumn('column16', 'geometry')
               ->addColumn('column17', 'point')
               ->addColumn('column18', 'linestring')
-              ->addColumn('column19', 'polygon');
+              ->addColumn('column19', 'polygon')
+              ->addColumn('column20', 'uuid')
+              ->addColumn('column21', 'set', array('values' => "one, two"))
+              ->addColumn('column22', 'enum', array('values' => array('three', 'four')));
         $pendingColumns = $table->getPendingColumns();
         $table->save();
         $columns = $this->adapter->getColumns('t');
@@ -576,7 +622,10 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
               ->addColumn('column16', 'geometry')
               ->addColumn('column17', 'point')
               ->addColumn('column18', 'linestring')
-              ->addColumn('column19', 'polygon');
+              ->addColumn('column19', 'polygon')
+              ->addColumn('column20', 'uuid')
+              ->addColumn('column21', 'set', array('values' => "one, two"))
+              ->addColumn('column22', 'enum', array('values' => array('three', 'four')));
         $pendingColumns = $table->getPendingColumns();
         $table->save();
         $columns = $this->adapter->getColumns('group');
@@ -808,6 +857,28 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('geometry', $rows[1]['Type']);
     }
 
+    public function testAddSetColumn()
+    {
+        $table = new \Phinx\Db\Table('table1', array(), $this->adapter);
+        $table->save();
+        $this->assertFalse($table->hasColumn('set_column'));
+        $table->addColumn('set_column', 'set', array('values' => array('one', 'two')))
+              ->save();
+        $rows = $this->adapter->fetchAll('SHOW COLUMNS FROM table1');
+        $this->assertEquals("set('one','two')", $rows[1]['Type']);
+    }
+
+    public function testAddEnumColumn()
+    {
+        $table = new \Phinx\Db\Table('table1', array(), $this->adapter);
+        $table->save();
+        $this->assertFalse($table->hasColumn('enum_column'));
+        $table->addColumn('enum_column', 'enum', array('values' => array('one', 'two')))
+              ->save();
+        $rows = $this->adapter->fetchAll('SHOW COLUMNS FROM table1');
+        $this->assertEquals("enum('one','two')", $rows[1]['Type']);
+    }
+
     public function testHasColumn()
     {
         $table = new \Phinx\Db\Table('table1', array(), $this->adapter);
@@ -828,5 +899,4 @@ class MysqlAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($tableQuoted->hasColumn('value'));
 
     }
-
 }

@@ -3,7 +3,7 @@
  * Phinx
  *
  * (The MIT license)
- * Copyright (c) 2014 Rob Morgan
+ * Copyright (c) 2015 Rob Morgan
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated * documentation files (the "Software"), to
@@ -224,30 +224,20 @@ class Config implements ConfigInterface
             throw new \UnexpectedValueException('Migrations path missing from config file');
         }
 
-        $path = realpath($this->values['paths']['migrations']);
-
-        if ($path === false) {
-            throw new \UnexpectedValueException(sprintf(
-                'Migrations directory "%s" does not exist',
-                $this->values['paths']['migrations']
-            ));
-        }
-
-        return $path;
+        return $this->values['paths']['migrations'];
     }
 
     /**
      * Gets the base class name for migrations.
      *
+     * @param boolean $dropNamespace Return the base migration class name without the namespace.
      * @return string
      */
-    public function getMigrationBaseClassName()
+    public function getMigrationBaseClassName($dropNamespace = true)
     {
-        if (!isset($this->values['migration_base_class'])) {
-            return 'AbstractMigration';
-        }
+        $className = !isset($this->values['migration_base_class']) ? 'Phinx\Migration\AbstractMigration' : $this->values['migration_base_class'];
 
-        return $this->values['migration_base_class'];
+        return $dropNamespace ? substr(strrchr($className, '\\'), 1) : $className;
     }
 
     /**

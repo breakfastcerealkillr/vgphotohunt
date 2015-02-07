@@ -43,14 +43,10 @@ The fastest way to install Phinx in your project is using Composer (http://getco
     curl -s https://getcomposer.org/installer | php
     ```
     
-1. Add Phinx as a dependency to your `composer.json` file:
+1. Require Phinx as a dependency using Composer: 
 
-    ```js
-    {
-        "require": {
-            "robmorgan/phinx": "*"
-        }
-    }
+    ```
+    php composer.phar require robmorgan/phinx
     ```
     
 1. Install Phinx:
@@ -106,20 +102,8 @@ Check out http://docs.phinx.org for the comprehensive documentation.
 
 ## Contributing
 
-Start by forking Phinx on GitHub: https://github.com/robmorgan/phinx
+Please read the [CONTRIBUTING](CONTRIBUTING.md) document.
 
-Clone your repository to a local directory on your development box.
-
-If you do not have Composer set up already, install it:
- 
- * `curl -s https://getcomposer.org/installer | php`
-
-Change to your Phinx clone directory and pull the necessary dependencies:
-
- * `php composer.phar install --dev`
-
-Copy the `phpunit.xml.dist` template to `phpunit.xml` and change the configuration to suit your environment.
-  
 ## News & Updates
 
 Follow Rob (@\_rjm\_) on Twitter to stay up to date (http://twitter.com/_rjm_)
@@ -127,6 +111,15 @@ Follow Rob (@\_rjm\_) on Twitter to stay up to date (http://twitter.com/_rjm_)
 ## Misc
 
 ### Version History
+
+**0.4.2** (Friday, 6th Feburary 2015)
+
+* Postgres support for `json` columns added
+* MySQL support for `enum` and `set` columns added
+* Allow setting `identity` option on columns
+* Template configuration and generation made more extensible
+* Created a base class for `ProxyAdapter` and `TablePrefixAdapter`
+* Switched to PSR-4
 
 **0.4.1** (Tuesday, 23rd December 2014)
 

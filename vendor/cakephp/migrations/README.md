@@ -43,7 +43,7 @@ The command above will display a list of available options. Make sure you read [
 
 ### Create a migration file with tables from your database
 
-To create your first migration file, execute:
+The [bake](https://github.com/cakephp/bake) command can be used to create a populated migration file based on the tables in your database:
 
 ```bash
 $ bin/cake bake migration Initial [-p PluginName] [-c connection]

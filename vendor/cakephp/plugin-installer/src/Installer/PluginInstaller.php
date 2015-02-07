@@ -116,7 +116,7 @@ class PluginInstaller extends LibraryInstaller
         $composer = $event->getComposer();
         $config = $composer->getConfig();
 
-        $vendorDir = $config->get('vendor-dir');
+        $vendorDir = realpath($config->get('vendor-dir'));
 
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
         $pluginsDir = dirname($vendorDir) . DIRECTORY_SEPARATOR . 'plugins';
