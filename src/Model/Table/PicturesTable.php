@@ -31,10 +31,12 @@ class PicturesTable extends Table {
             'foreignKey' => 'mark_id'
         ]);
         $this->hasMany('PictureComments', [
-            'foreignKey' => 'picture_id'
+            'foreignKey' => 'picture_id',
+            'dependent' => true
         ]);
         $this->hasMany('Votes', [
-            'foreignKey' => 'picture_id'
+            'foreignKey' => 'picture_id',
+            'dependent' => true
         ]);
     }
 
@@ -125,7 +127,7 @@ class PicturesTable extends Table {
 
         $query = $this
                 ->find()
-                ->contain(['Users', 'Hunts', 'Marks', 'PictureComments.Users', 'Votes'])
+                ->contain(['Users', 'Marks', 'PictureComments.Users', 'Votes'])
                 ->where(['Pictures.id' => $id])
                 ->first();
 
@@ -146,6 +148,21 @@ class PicturesTable extends Table {
         }
 
         return $query;
+    }
+
+    public function deleteFiles($id) {
+
+        if (!isset($id)) {
+            return false;
+        }
+
+        $picture = $this->get($id);
+        if ($picture->guid != "") {
+            foreach (glob('pictures/' . $picture->guid . '*') as $file) {
+                unlink($file);
+            }
+        }
+
     }
 
 }

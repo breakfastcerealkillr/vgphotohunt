@@ -5,14 +5,17 @@
             <thead>
             <th>ID</th>
             <th>Name</th>
+            <th>Enabled</th>
             </thead>
             <?php foreach ($games as $game): ?>
                 <tr>
-                    <td><?= $this->Html->link($game->id, ['action' => 'gameView', $game->id]) ?></td>
+                    <td><?= $this->Html->link($game->id, ['controller' => 'games', 'action' => 'editAdmin', $game->id]) ?></td>
                     <td><?= $game->name ?></td>
+                    <td><?= $game->enabled ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
+        <?= $this->Html->link('Add a New Game', ['controller' => 'games', 'action' => 'addAdmin'], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?= $this->element('paginator') ?>

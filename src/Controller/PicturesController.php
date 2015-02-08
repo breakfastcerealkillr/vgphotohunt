@@ -12,19 +12,6 @@ use App\Controller\AppController;
 class PicturesController extends AppController {
 
     /**
-     * Index method
-     *
-     * @return void
-     */
-    public function index() {
-        $this->paginate = [
-            'contain' => ['Users', 'Sets']
-        ];
-        $this->set('pictures', $this->paginate($this->Pictures));
-        $this->set('_serialize', ['pictures']);
-    }
-
-    /**
      * View method
      *
      * @param string|null $id Picture id.
@@ -96,6 +83,38 @@ class PicturesController extends AppController {
             $this->Flash->error('The picture could not be deleted. Please, try again.');
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function editAdmin($id) {
+
+        $picture = $this->Pictures->get($id, [
+            'contain' => ['PictureComments.Users', 'Marks', 'Users']
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
+            if ($this->Pictures->save($picture)) {
+                $this->Flash->success('The picture has been saved.');
+                return $this->redirect($this->referer());
+            } else {
+                $this->Flash->error('The picture could not be saved. Please, try again.');
+            }
+        }
+        $this->set(compact('picture', 'users', 'sets'));
+    }
+
+    public function deleteAdmin($id = null) {
+        $this->request->allowMethod(['post', 'delete']);
+        $picture = $this->Pictures->get($id);
+        
+        $this->Pictures->deleteFiles($id);
+        
+        if ($this->Pictures->delete($picture)) {
+            $this->Flash->success('The picture has been deleted.');
+            return $this->redirect(['controller' => 'admin', 'action' => 'pictures']);
+        } else {
+            $this->Flash->error('The picture could not be deleted. Please, try again.');
+            return $this->redirect($this->referer());
+        }
     }
 
 }

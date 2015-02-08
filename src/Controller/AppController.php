@@ -94,4 +94,16 @@ class AppController extends Controller {
         }
     }
 
+    public function adminOnly(array $redirect = null) {
+
+        if (!isset($redirect)) {
+            $redirect = $this->referer();
+        }
+
+        if ($this->Auth->user('roles') !== "admin" && $this->view !== "index") {
+            $this->Flash->error('No no no! Not today!');
+            return $this->redirect($redirect);
+        }
+    }
+
 }

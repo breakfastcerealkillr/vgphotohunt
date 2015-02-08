@@ -9,10 +9,7 @@ class AdminController extends AppController {
     public function beforeFilter(\Cake\Event\Event $event) {
         parent::beforeFilter($event);
 
-        if ($this->Auth->user('roles') !== "admin" && $this->view !== "index") {
-            $this->Flash->error('No no no! Not today!');
-            return $this->redirect(['action' => 'index']);
-        }
+        $this->adminOnly(['action' => 'index']);
     }
 
     public function initialize() {

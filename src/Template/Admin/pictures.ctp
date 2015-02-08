@@ -11,11 +11,11 @@
             </thead>
             <?php foreach ($pictures as $picture): ?>
                 <tr>
-                    <td><?= $this->Html->link($picture->id, ['action' => 'pictureView', $picture->id]) ?></td>
+                    <td><?= $this->Html->link($picture->id, ['controller' => 'pictures','action' => 'editAdmin', $picture->id]) ?></td>
                     <td><?= $this->Html->link($picture->user->username, ['action' => 'userView', $picture->user->id]) ?></td>
                     <td><?= $this->Html->link($picture->mark->name, ['action' => 'markView', $picture->mark->id]) ?></td>
                     <td><?= $this->Time->format($picture->date, null, null, $timezone) ?></td>
-                    <td><?= $this->Html->image('/pictures/' . $picture->guid . '_thumb.png', ['url' => ['action' => 'pictureView', $picture->id]]) ?></td>
+                    <td><?= $this->Html->image('/pictures/' . $picture->guid . '_thumb.png', ['url' => ['controller' => 'pictures','action' => 'editAdmin', $picture->id]]) ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
