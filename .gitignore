@@ -1,4 +1,10 @@
 /config/app.php
 /tmp/*
 /logs/*
-/vendors/*
+/vendor
+/bin
+/plugins/*
+.htaccess
+composer.lock
+index.php
+
