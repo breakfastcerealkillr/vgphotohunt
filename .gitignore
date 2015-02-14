@@ -2,7 +2,6 @@
 /tmp/*
 /logs/*
 /vendor
-/bin
 /plugins/*
 .htaccess
 composer.lock
