@@ -72,10 +72,12 @@ class AdminController extends AppController {
     public function users() {
 
         $this->paginate = [
+            'finder' => 'enabled',
             'order' => ['Users.id' => 'DESC']
         ];
 
         $this->set('users', $this->paginate('Users'));
+
     }
 
     public function pictures() {
@@ -86,6 +88,16 @@ class AdminController extends AppController {
         ];
 
         $this->set('pictures', $this->paginate('Pictures'));
+    }
+    public function usersDeleted() {
+
+        $this->paginate = [
+            'finder' => 'all',
+            'order' => ['Users.id' => 'DESC']
+        ];
+
+        $this->set('users', $this->paginate('Users'));
+
     }
 
 }

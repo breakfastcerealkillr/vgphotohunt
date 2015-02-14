@@ -166,7 +166,36 @@ class UsersController extends AppController {
             }
         }
     }
+    
+    public function adminEdit($id = null) {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
 
+
+        
+    }
+    
+    public function adminDelete($id = null) {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
+
+  
+        $user = $this->Users->get($id);
+
+        $user->enabled = 0;
+
+        if ($this->Users->save($user)) {
+            $this->Flash->success('Deleted!');
+        } else {
+            $this->Flash->success('Failed!');
+        }
+
+        return $this->redirect($this->referer());
+        
+    }
+    
     public function deleteAvatar() {
 
         $user = $this->Users->get($this->user_id);
@@ -186,5 +215,7 @@ class UsersController extends AppController {
 
         return $this->redirect($this->referer());
     }
+    
+
 
 }

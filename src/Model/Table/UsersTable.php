@@ -69,6 +69,15 @@ class UsersTable extends Table {
         return $rules;
     }
 
+        public function findEnabled(Query $query, array $options) {
+        $query->where([
+            'Users.enabled' => true]);
+        return $query;
+    }
+    
+    
+    
+    
     public function beforeSave($event, $entity) {
 
         if (!empty($entity->file['name'])) {
@@ -140,5 +149,4 @@ class UsersTable extends Table {
             return false;
         }
     }
-
 }
