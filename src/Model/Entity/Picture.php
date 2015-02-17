@@ -16,13 +16,8 @@ class Picture extends Entity
      */
     protected $_accessible = [
         'user_id' => true,
-        'set_id' => true,
+        'mark_id' => true,
         'guid' => true,
-        'date' => true,
-        'user' => true,
-        'set' => true,
-        'picture_comments' => true,
-        'votes' => true,
-        'file' => true
+        'date' => true
     ];
 }

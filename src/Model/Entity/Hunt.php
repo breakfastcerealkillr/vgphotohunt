@@ -18,13 +18,9 @@ class Hunt extends Entity
         'game_id' => true,
         'name' => true,
         'description' => true,
-        'set_start_date' => true,
-        'set_end_date' => true,
+        'start_date' => true,
+        'end_date' => true,
         'voting_start_date' => true,
         'voting_end_date' => true,
-        'game' => true,
-        'winner_user' => true,
-        'pictures' => true,
-        'votes' => true,
     ];
 }

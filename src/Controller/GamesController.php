@@ -16,33 +16,54 @@ class GamesController extends AppController {
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function addAdmin() {
+    public function adminAdd() {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
         $game = $this->Games->newEntity();
+
         if ($this->request->is('post')) {
             $game = $this->Games->patchEntity($game, $this->request->data);
             if ($this->Games->save($game)) {
                 $this->Flash->success('The game has been saved.');
-                return $this->redirect(['controller' => 'admin', 'action' => 'games']);
+                return $this->redirect(['controller' => 'Admin' ,'action' => 'games']);
             } else {
                 $this->Flash->error('The game could not be saved. Please, try again.');
             }
         }
-        $this->set(compact('game'));
+        
     }
-
-    public function editAdmin($id = null) {
+    
+    public function adminEdit($id = null) {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
 
         $game = $this->Games->get($id);
-
         if ($this->request->is(['patch', 'post', 'put'])) {
             $game = $this->Games->patchEntity($game, $this->request->data);
             if ($this->Games->save($game)) {
-                $this->Flash->success('The game has been saved.');
-                return $this->redirect($this->referer());
+                $this->Flash->success('Saved!');
+                return $this->redirect(['action' => 'adminEdit', $id]);
             } else {
                 $this->Flash->error('The game could not be saved. Please, try again.');
             }
         }
-        $this->set(compact('game'));
+        $this->set('game', $game);
+    }
+    
+    public function adminDelete($id = null) {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
+
+        $entity = $this->Games->get($id);
+        if ($this->Games->delete($entity)) {
+            $this->Flash->success('Deleted!');
+        } else {
+            $this->Flash->error('Failed!');
+        }
+
+        return $this->redirect($this->referer());    
     }
 }

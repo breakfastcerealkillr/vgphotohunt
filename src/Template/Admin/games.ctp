@@ -1,21 +1,23 @@
 <?= $this->element('adminNav') ?>
+<?= $this->Html->link('Add New', ['controller' => 'Games', 'action' => 'adminAdd'], ['class' => 'btn btn-xs btn-info']) ?>
 <div class="row">
     <div class="col-md-10 col-centered">
         <table class="table">
             <thead>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Enabled</th>
+                <th><?= $this->Paginator->sort('id', 'ID'); ?></th>
+                <th><?= $this->Paginator->sort('name', 'Name'); ?></th>
+                <th>Edit</th>
+                <th>Delete?</th>
             </thead>
             <?php foreach ($games as $game): ?>
                 <tr>
                     <td><?= $this->Html->link($game->id, ['controller' => 'games', 'action' => 'editAdmin', $game->id]) ?></td>
                     <td><?= $game->name ?></td>
-                    <td><?= $game->enabled ?></td>
+                    <td><?= $this->Html->link('Edit', ['controller' => 'Games', 'action' => 'adminEdit', $game->id], ['class' => 'btn btn-xs btn-warning']) ?></td>
+                    <td><?= $this->Html->link('Delete', ['controller' => 'Games', 'action' => 'adminDelete', $game->id], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']); ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
-        <?= $this->Html->link('Add a New Game', ['controller' => 'games', 'action' => 'addAdmin'], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
-<?= $this->element('paginator') ?>
+<?php if ($this->Paginator->counter('{{count}}') > $pageLimit) {echo $this->element('paginator');} ?>

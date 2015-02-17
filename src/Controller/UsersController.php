@@ -167,12 +167,39 @@ class UsersController extends AppController {
         }
     }
     
+    public function adminAdd() {
+        if ($this->Auth->user('roles') != "admin") {
+            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+        }
+        $user = $this->Users->newEntity();
+
+        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('The user has been saved.');
+                return $this->redirect(['controller' => 'Admin' ,'action' => 'users']);
+            } else {
+                $this->Flash->error('The user could not be saved. Please, try again.');
+            }
+        }
+    }
+    
     public function adminEdit($id = null) {
         if ($this->Auth->user('roles') != "admin") {
             return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
         }
 
-
+        $user = $this->Users->get($id);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Saved!');
+                return $this->redirect(['action' => 'adminEdit', $id]);
+            } else {
+                $this->Flash->error('The user could not be saved. Please, try again.');
+            }
+        }
+        $this->set('user', $user);
         
     }
     
@@ -187,7 +214,7 @@ class UsersController extends AppController {
         $user->enabled = 0;
 
         if ($this->Users->save($user)) {
-            $this->Flash->success('Deleted!');
+            $this->Flash->success('User is disabled!');
         } else {
             $this->Flash->success('Failed!');
         }

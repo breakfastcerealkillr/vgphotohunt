@@ -10,6 +10,8 @@ class AdminController extends AppController {
         parent::beforeFilter($event);
 
         $this->adminOnly(['action' => 'index']);
+        $pageLimit = 10;
+        $this->set('pageLimit', $pageLimit);
     }
 
     public function initialize() {
@@ -17,7 +19,7 @@ class AdminController extends AppController {
 
         $this->loadComponent('Paginator');
     }
-
+    
     public function index() {
 
         if ($this->Auth->user('roles') === "admin") {
@@ -50,7 +52,7 @@ class AdminController extends AppController {
     }
 
     public function hunts() {
-
+        
         $this->paginate = [
             'contain' => ['Games'],
             'order' => ['Hunts.id' => 'DESC']
@@ -60,9 +62,9 @@ class AdminController extends AppController {
     }
 
     public function marks() {
-
+        
         $this->paginate = [
-            'contain' => ['Hunts'],
+            'contain' => ['Hunts', 'Hunts.Games', 'Users'],
             'order' => ['Marks.id' => 'DESC']
         ];
 
@@ -93,16 +95,6 @@ class AdminController extends AppController {
         ];
 
         $this->set('pictures', $this->paginate('Pictures'));
-    }
-
-    public function usersDeleted() {
-
-        $this->paginate = [
-            'finder' => 'all',
-            'order' => ['Users.id' => 'DESC']
-        ];
-
-        $this->set('users', $this->paginate('Users'));
     }
 
 }

@@ -24,7 +24,7 @@ class UsersTable extends Table {
      */
     public function initialize(array $config) {
         $this->table('users');
-        $this->displayField('id');
+        $this->displayField('username');
         $this->primaryKey('id');
         $this->hasMany('PictureComments', [
             'foreignKey' => 'user_id'
@@ -81,6 +81,12 @@ class UsersTable extends Table {
         return $query;
     }
 
+     public function beforeMarshal(Event $event, ArrayObject $data) {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        } 
+     }
+     
     public function beforeSave($event, $entity) {
 
         if (!empty($entity->file['name'])) {

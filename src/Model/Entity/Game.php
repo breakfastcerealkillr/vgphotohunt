@@ -15,8 +15,6 @@ class Game extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'sets' => true,
-        'enabled' =>true
+        'name' => true
     ];
 }

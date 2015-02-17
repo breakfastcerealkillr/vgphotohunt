@@ -36,7 +36,10 @@ class User extends Entity {
         'avatar' => true,
         'steam' => true,
         'file' => true,
-        'timezone' => true
+        'timezone' => true,
+        'xp' => true,
+        'level' => true,
+        'current_portrait' => true
     ];
 
     protected function _setPassword($password) {

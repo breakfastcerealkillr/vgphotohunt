@@ -22,12 +22,15 @@ class MarksTable extends Table
     public function initialize(array $config)
     {
         $this->table('marks');
-        $this->displayField('id');
+        $this->displayField('name');
         $this->primaryKey('id');
         $this->belongsTo('Hunts', [
             'foreignKey' => 'hunt_id'
         ]);
-    }
+        $this->belongsTo('Users', [
+            'foreignKey' => 'winner_id'
+        ]);
+        }
 
     /**
      * Default validation rules.
@@ -43,8 +46,8 @@ class MarksTable extends Table
             ->add('hunt_id', 'valid', ['rule' => 'numeric'])
             ->requirePresence('hunt_id', 'create')
             ->notEmpty('hunt_id')
-            ->add('winner_user_id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('winner_user_id');
+            ->add('winner_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('winner_id');
 
         return $validator;
     }

@@ -1,0 +1,115 @@
+body {
+    background-color: #9d892a;
+    background-image: url("../img/background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    font-family: 'Open Sans', sans-serif;
+    color: #AAAAAA;
+    margin-top: 5em;
+}
+
+div {border: 0px solid black;
+     padding: 0px;
+}
+
+.Grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+}
+
+@media (min-width: 24em) {
+    .grid-fit > .Grid-cell {flex: 1;}
+    .grid-full > .Grid-cell {flex: 0 0 100%}
+    .grid-1of2 > .Grid-cell {flex: 0 0 50%}
+    .grid-1of3 > .Grid-cell {flex: 0 0 33.3333%}
+    .grid-1of4 > .Grid-cell {flex: 0 0 25%}
+}
+.grid-bottom {align-items: flex-end;}
+
+.cc {
+    margin: 0px auto;
+    width: 78%;
+    min-width: 514px;}
+
+.logobg {
+    background-color: rgba(0,0,0,0.77);
+    padding: 1em;
+    min-width: 544px;
+}
+
+.logoimg {}
+.hbutton {}
+
+.logindiv {text-align: center;}
+.hbuttondiv {
+    display: inline-block;
+    height: 3.97em;
+    width: 10em;
+    padding-top: .4em;
+    margin: 0em .4em;
+    text-align: center;
+
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.87) 0%, rgba(0,0,0,0.3) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.87)), color-stop(100%,rgba(0,0,0,0.3)));
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.87) 0%,rgba(0,0,0,0.3) 100%);
+    background: -o-linear-gradient(top, rgba(0,0,0,0.87) 0%,rgba(0,0,0,0.3) 100%);
+    background: -ms-linear-gradient(top, rgba(0,0,0,0.87) 0%,rgba(0,0,0,0.3) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.87) 0%,rgba(0,0,0,0.3) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#de000000', endColorstr='#4d000000',GradientType=0 );
+}
+
+.logoside {
+    align-self: flex-start;}
+.rightside {
+    align-self: flex-end;
+    margin-right: 1em;
+    margin-left: auto;}
+
+.maincontainer {
+    width: 80%;
+    min-width: 514px;
+    margin: 0px auto;
+    padding: 1em;
+    background-color: rgba(0,0,0,0.77);
+}
+.list-unstyled {margin-left: 1em; margin-top: 1em; margin-bottom: 1em;}
+.sidebar {min-width: 14em; float: left;}
+.usericon {
+    float: left;
+    height: 64px;
+    width: 64px;
+    margin-bottom: 1em;
+    margin-right: .75em;}
+.username {
+    color: white; 
+    margin: 0px; 
+    font-weight: bold;
+}
+.userstats {margin: .0em;}
+.sidebarlist {clear: both;}
+.maincontent { }
+.maincontent {min-width: 1px;}
+.welcomespan {
+    display:table;
+    margin:0 auto;}
+.todobox {float: right;
+          margin: 4em;}
+.page-header {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+a {
+    color: #eee;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
