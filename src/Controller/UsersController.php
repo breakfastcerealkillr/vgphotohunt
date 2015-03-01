@@ -168,9 +168,9 @@ class UsersController extends AppController {
     }
     
     public function adminAdd() {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+		
+		$this->adminOnly();
+		
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post')) {
@@ -185,9 +185,8 @@ class UsersController extends AppController {
     }
     
     public function adminEdit($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+
+		$this->adminOnly();
 
         $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -204,9 +203,8 @@ class UsersController extends AppController {
     }
     
     public function adminDelete($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+        
+		$this->adminOnly();
 
   
         $user = $this->Users->get($id);

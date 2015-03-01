@@ -113,3 +113,19 @@ a {
     float: none;
     margin: 0 auto;
 }
+
+.btn-default {
+  color: #BBB;
+  background-color: #444;
+  border-color: #777;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: #FFF;
+  background-color: #555;
+  border-color: #888;
+}

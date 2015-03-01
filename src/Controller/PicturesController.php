@@ -85,7 +85,26 @@ class PicturesController extends AppController {
         return $this->redirect(['action' => 'index']);
     }
 
-    public function editAdmin($id) {
+    public function adminAdd() {
+        
+	$this->adminOnly();
+
+        $picture = $this->Pictures->newEntity();
+
+        if ($this->request->is('post')) {
+            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
+            if ($this->Pictures->save($picture)) {
+                $this->Flash->success('The picture has been saved.');
+                return $this->redirect(['controller' => 'Admin' ,'action' => 'Pictures']);
+            } else {
+                $this->Flash->error('The picture could not be saved. Please, try again.');
+            }
+        }
+        $this->set('users', $this->Pictures->Users->find('list'));
+        $this->set('marks', $this->Pictures->Marks->find('list'));
+    }
+    
+    public function adminEdit($id) {
 
         $picture = $this->Pictures->get($id, [
             'contain' => ['PictureComments.Users', 'Marks', 'Users']
@@ -99,11 +118,15 @@ class PicturesController extends AppController {
                 $this->Flash->error('The picture could not be saved. Please, try again.');
             }
         }
-        $this->set(compact('picture', 'users', 'sets'));
+        
+        $this->set('picture', $picture);
+        $this->set('users', $this->Pictures->Users->find('list'));
+        $this->set('marks', $this->Pictures->Marks->find('list'));
     }
 
-    public function deleteAdmin($id = null) {
-        $this->request->allowMethod(['post', 'delete']);
+    public function adminDelete($id = null) {
+        $this->adminOnly();
+        
         $picture = $this->Pictures->get($id);
         
         $this->Pictures->deleteFiles($id);

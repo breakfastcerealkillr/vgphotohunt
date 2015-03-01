@@ -18,13 +18,12 @@ class AdminController extends AppController {
         parent::initialize();
 
         $this->loadComponent('Paginator');
+		$this->adminOnly(); /* Testing to see if this will auto-load on all other methods. 
+								I have trust issues with ::initialize. BV */
     }
     
     public function index() {
 
-        if ($this->Auth->user('roles') === "admin") {
-            return $this->redirect(['action' => 'dashboard']);
-        }
 
         if ($this->request->is('post')) {
 
@@ -90,11 +89,69 @@ class AdminController extends AppController {
     public function pictures() {
 
         $this->paginate = [
-            'contain' => ['Users', 'Marks'],
+            'contain' => ['Users', 'Marks', 'Marks.Hunts'],
             'order' => ['Pictures.id' => 'DESC']
         ];
 
         $this->set('pictures', $this->paginate('Pictures'));
     }
 
+    public function pictureComments() {
+
+        $this->paginate = [
+            'contain' => ['Users', 'Pictures'],
+            'order' => ['PictureComments.id' => 'DESC']
+        ];
+
+        $this->set('picturecomments', $this->paginate('PictureComments'));
+    }
+    
+    public function news() {
+
+        $this->paginate = [
+            'contain' => ['Users'],
+            'order' => ['News.id' => 'DESC']
+        ];
+
+        $this->set('news', $this->paginate('News'));
+    }
+    
+    public function newsComments() {
+
+        $this->paginate = [
+            'contain' => ['News', 'Users'],
+            'order' => ['NewsComments.id' => 'DESC']
+        ];
+
+        $this->set('newscomments', $this->paginate('NewsComments'));
+    }
+    
+    public function awards() {
+
+        $this->paginate = [
+            'contain' => ['Users', 'Portraits'],
+            'order' => ['Awards.id' => 'DESC']
+        ];
+
+        $this->set('awards', $this->paginate('Awards'));
+    }
+    
+    public function portraits() {
+
+        $this->paginate = [
+            'order' => ['Pictures.id' => 'DESC']
+        ];
+
+        $this->set('portraits', $this->paginate('Portraits'));
+    }
+    
+    public function votes() {
+
+        $this->paginate = [
+            'contain' => ['Users', 'Pictures', 'Marks'],
+            'order' => ['Votes.id' => 'DESC']
+        ];
+
+        $this->set('votes', $this->paginate('Votes'));
+    }
 }

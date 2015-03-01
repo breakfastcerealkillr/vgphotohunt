@@ -17,9 +17,9 @@ class GamesController extends AppController {
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function adminAdd() {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+        
+		$this->adminOnly();
+
         $game = $this->Games->newEntity();
 
         if ($this->request->is('post')) {
@@ -35,9 +35,8 @@ class GamesController extends AppController {
     }
     
     public function adminEdit($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+
+		$this->adminOnly();
 
         $game = $this->Games->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -53,9 +52,8 @@ class GamesController extends AppController {
     }
     
     public function adminDelete($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+
+		$this->adminOnly();
 
         $entity = $this->Games->get($id);
         if ($this->Games->delete($entity)) {

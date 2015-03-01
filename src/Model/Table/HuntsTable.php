@@ -24,9 +24,7 @@ class HuntsTable extends Table {
         $this->table('hunts');
         $this->displayField('name');
         $this->primaryKey('id');
-        $this->belongsTo('Games', [
-            'foreignKey' => 'game_id'
-        ]);
+        $this->belongsTo('Games', ['foreignKey' => 'game_id']);
     }
 
     /**

@@ -74,25 +74,26 @@ class PicturesTable extends Table {
     }
 
     public function beforeSave($event, $entity) {
+        if (is_null($entity->id)) {
+            if (empty($entity->file['tmp_name'])) {
+                return false;
+            }
 
-        if (empty($entity->file['tmp_name'])) {
-            return false;
+            $entity->guid = Text::uuid();
+            $entity->timestamp = Time::now();
+
+            $full_image_name = 'pictures/' . $entity->guid . '.png';
+
+            if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
+                return false;
+            }
+
+            $thumbnail_name = 'pictures/' . $entity->guid . '_thumb.png';
+
+            $this->scale($full_image_name, $thumbnail_name);
+
+            return true;
         }
-
-        $entity->guid = Text::uuid();
-        $entity->date = Time::now();
-
-        $full_image_name = 'pictures/' . $entity->guid . '.png';
-
-        if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
-            return false;
-        }
-
-        $thumbnail_name = 'pictures/' . $entity->guid . '_thumb.png';
-
-        $this->scale($full_image_name, $thumbnail_name);
-
-        return true;
     }
 
     private function scale($filename, $save_path) {

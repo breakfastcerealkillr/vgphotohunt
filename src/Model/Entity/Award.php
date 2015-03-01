@@ -4,9 +4,9 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Picture Entity.
+ * Award Entity.
  */
-class Picture extends Entity
+class Award extends Entity
 {
 
     /**
@@ -16,9 +16,7 @@ class Picture extends Entity
      */
     protected $_accessible = [
         'user_id' => true,
-        'mark_id' => true,
-        'guid' => true,
-        'timestamp' => true,
-        'file' => true
+	'portrait_id' => true,
+	'timestamp' => true
     ];
 }

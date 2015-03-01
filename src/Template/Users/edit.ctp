@@ -3,9 +3,9 @@
         <h2><?= $user->username ?></h2>
         <?= $this->Form->create('Users.edit', ['type' => 'file']) ?>
         <?php if (empty($user->avatar)): ?>
-            <img src="/avatars/default_100.png">
+            <?= $this->Html->image('../avatars/default_100.png') ?>
         <?php else: ?>
-            <img src="/avatars/<?= $user->avatar ?>_100.png">
+            <?= $this->Html->image('../avatars/' . $user->avatar . '_100.png') ?>
             <?= $this->Html->link('Delete', ['action' => 'deleteAvatar'], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']) ?>
         <?php endif ?>
         <?= $this->Form->hidden('Users.id', ['default' => $user->id]) ?>

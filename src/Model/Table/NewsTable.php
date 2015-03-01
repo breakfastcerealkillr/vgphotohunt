@@ -2,8 +2,6 @@
 
 namespace App\Model\Table;
 
-use Cake\Auth\DigestAuthenticate;
-use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -12,9 +10,9 @@ use Cake\Utility\Text;
 use Cake\I18n\Time;
 
 /**
- * Users Model
+ * News Model
  */
-class UsersTable extends Table {
+class NewsTable extends Table {
 
     /**
      * Initialize method
@@ -23,19 +21,15 @@ class UsersTable extends Table {
      * @return void
      */
     public function initialize(array $config) {
-        $this->table('users');
-        $this->displayField('username');
+        $this->table('news');
+        $this->displayField('title');
         $this->primaryKey('id');
-        $this->hasMany('PictureComments', [
+        $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Pictures', [
-            'foreignKey' => 'user_id'
+        $this->hasMany('NewsComments', [
+            'foreignKey' => 'news_id'
         ]);
-        $this->hasMany('Votes', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Awards', ['foreignKey' => 'user_id']);
     }
 
     /**
@@ -48,11 +42,9 @@ class UsersTable extends Table {
         $validator
                 ->add('id', 'valid', ['rule' => 'numeric'])
                 ->allowEmpty('id', 'create')
-                ->requirePresence('username', 'create')
-                ->notEmpty('username')
-                ->allowEmpty('credentials_expire_at')
-                ->allowEmpty('steam_id')
-                ->allowEmpty('avatar');
+                ->add('user_id', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('user_id', 'create')
+                ->notEmpty('user_id');
 
         return $validator;
     }
@@ -65,34 +57,15 @@ class UsersTable extends Table {
      * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules) {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
 
-    public function findEnabled(Query $query) {
-        $query->where([
-            'Users.enabled' => true]);
-        return $query;
-    }
-
-    public function findDisabled(Query $query) {
-        $query->where([
-            'Users.enabled' => false]);
-        return $query;
-    }
-
-     public function beforeMarshal(Event $event, ArrayObject $data) {
-        if (empty($data['password'])) {
-            unset($data['password']);
-        } 
-     }
-     
     public function beforeSave($event, $entity) {
 
         if (!empty($entity->file['name'])) {
-            if ($entity->avatar !== '') {
-                foreach (glob('avatars/' . $entity->avatar . '*') as $file) {
+            if ($entity->pic_url !== '') {
+                foreach (glob('newspics/' . $entity->pic_url . '*') as $file) {
                     unlink($file);
                 }
             }
@@ -102,16 +75,16 @@ class UsersTable extends Table {
             return true;
         }
 
-        $entity->avatar = Text::uuid();
+        $entity->pic_url = Text::uuid();
 
-        $full_image_name = 'avatars/' . $entity->avatar . '.png';
+        $full_image_name = 'newspics/' . $entity->pic_url . '.png';
 
         if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
             return false;
         }
 
-        $thumb100 = 'avatars/' . $entity->avatar . '_100.png';
-        $thumb60 = 'avatars/' . $entity->avatar . '_60.png';
+        $thumb100 = 'newspics/' . $entity->pic_url . '_100.png';
+        $thumb60 = 'newspics/' . $entity->pic_url . '_60.png';
 
         $this->scale($full_image_name, $thumb100, 100);
         $this->scale($full_image_name, $thumb60, 60);
@@ -143,21 +116,6 @@ class UsersTable extends Table {
         return imagepng($image_p, $save_path, 0);
     }
 
-    public function lastLogin($user_id = null) {
 
-        if (!$user_id) {
-            return false;
-        }
-
-        $user = $this->get($user_id);
-
-        $user->last_login = Time::now();
-
-        if ($this->save($user)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 }
