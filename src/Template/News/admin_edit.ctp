@@ -1,11 +1,14 @@
 <?= $this->element('adminNav') ?>
+<?= $this->Html->css('jquery-ui'); ?>
+<?= $this->Html->script('jquery-ui'); ?>
+<?= $this->Html->script('datepicker'); ?>
 <div class="row">
     <div class="col-md-4">
         <h2><?= $news->id ?> - <?= $news->title ?></h2>
         <?= $this->Form->create('adminEdit', ['type' => 'file']) ?>
         <?= $this->Form->input('title', ['label' => 'Title', 'default' => $news->title]) ?>
         <?= $this->Form->input('body', ['label' => 'Body', 'default' => $news->body]) ?>
-        <label class="control-label"  for="date[year]">Date</label><?= $this->Form->dateTime('date', ['default' => $news->date]) ?>
+        <?= $this->Form->input('timestamp', ['label' => 'Date Time', 'id' => 'datepicker', 'default' => $this->Time->format($news->timestamp, 'yyyy-MM-dd HH:mm:ss', null)]) ?>
         <?php if (!empty($news->pic_url)): ?>
             <?= $this->Html->image('../newspics/' . $news->pic_url . '_100.png') ?>
             <?= $this->Html->link('Delete', ['action' => 'deleteNewsPic', $news->id], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']) ?>

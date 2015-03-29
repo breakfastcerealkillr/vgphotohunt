@@ -68,7 +68,7 @@ class MarksController extends AppController {
         }
         $this->set('mark', $mark);
         $this->set('hunts', $this->Marks->Hunts->find('list'));
-        $this->set('users', $this->Marks->Users->find('list'));
+        $this->set('users', $this->Marks->Pictures->find('list'));
     }
     
     public function adminDelete($id = null) {

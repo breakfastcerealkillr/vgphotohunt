@@ -7,3 +7,11 @@
 composer.lock
 index.php
 
+
+nbproject/private/private.properties
+nbproject/project.properties
+nbproject/project.xml
+*.png
+*.db
+*.htaccess
+webroot/.htaccess

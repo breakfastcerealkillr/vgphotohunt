@@ -116,6 +116,12 @@ class NewsTable extends Table {
         return imagepng($image_p, $save_path, 0);
     }
 
+    public function findNewest() {
+        $query = $this->find()
+                ->limit(3)
+                ->order(['timestamp' => 'DESC']);
 
+        return $query;
+    }
 
 }

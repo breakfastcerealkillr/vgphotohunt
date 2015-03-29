@@ -2,6 +2,7 @@
 
 namespace App\Model\Table;
 
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -68,6 +69,11 @@ class HuntsTable extends Table {
         return $rules;
     }
 
+    public function beforeSave($event, $entity) {
+        
+
+    }
+    
     public function findWithStatus() {
 
         $query = $this->find();
@@ -79,52 +85,35 @@ class HuntsTable extends Table {
         return $results;
     }
 
-    public function findOpen($game = null) {
+    public function findOpenHunts($limit = null) {
+        
 
-        $query = $this->find();
+        $currentTime = Time::parse('now');
+        
+        $query = $this->find()
+                ->contain(['Games'])
+                ->where(['start_date <=' => $currentTime])
+                ->andWhere(['end_date >=' => $currentTime])
+                ->limit($limit) 
+                ->order(['start_date' => 'ASC']);
 
-        $query->contain('Games');
-
-        if (isset($game)) {
-            $query->where(['Games.name' => $game]);
-        }
-
-        $results = $this->statusParse($query);
-
-        $query->formatResults(function ($results) {
-            return $results->map(function ($row) {
-                        if (!$row['hunt_open']) {
-                            $row['hidden'] = true;
-                        }
-                        return $row;
-                    });
-        });
-
-        return $results;
+        return $query;
+        
     }
 
-    public function findOpenVotes($game = null) {
+    public function findOpenVotes($limit = null) {
 
-        $query = $this->find();
+        $currentTime = Time::parse('now');
+        
+        $query = $this->find()
+                ->contain(['Games'])
+                ->where(['voting_start_date <=' => $currentTime])
+                ->andWhere(['voting_end_date >=' => $currentTime])
+                ->limit($limit) 
+                ->order(['start_date' => 'ASC']);
 
-        $query->contain('Games');
+        return $query;
 
-        if (isset($game)) {
-            $query->where(['Games.name' => $game]);
-        }
-
-        $results = $this->statusParse($query);
-
-        $query->formatResults(function ($results) {
-            return $results->map(function ($row) {
-                        if (!$row['voting_open']) {
-                            $row['hidden'] = true;
-                        }
-                        return $row;
-                    });
-        });
-
-        return $results;
     }
 
     private function statusParse($query) {

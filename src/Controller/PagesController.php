@@ -14,6 +14,15 @@ class PagesController extends AppController {
 
     public function index() {
         
+    $this->loadModel('News');
+    $this->set('news', $this->News->findNewest());
+    
+    $this->loadModel('Marks');
+    $this->set('winners', $this->Marks->findWinners());
+    
+    $this->loadModel('Hunts');
+    $this->set('openhunts', $this->Hunts->findOpenHunts());
+    $this->set('openvotes', $this->Hunts->findOpenVotes());
     }
 
     public function what() {

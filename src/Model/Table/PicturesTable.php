@@ -120,37 +120,6 @@ class PicturesTable extends Table {
         return imagepng($image_p, $save_path, 0);
     }
 
-    public function viewWithStatus($id) {
-
-        if (!isset($id)) {
-            return false;
-        }
-
-        $query = $this
-                ->find()
-                ->contain(['Users', 'Marks', 'PictureComments.Users', 'Votes'])
-                ->where(['Pictures.id' => $id])
-                ->first();
-
-        $now = Time::parse('now');
-
-        if ($query->hunt->start_date <= $now && $query->hunt->end_date >= $now) {
-            $query->hunt->open = true;
-            $query->hunt->status = "Hunt Open";
-        } else {
-            $query->hunt->open = false;
-        }
-
-        if ($query->hunt->voting_start_date <= $now && $query->hunt->voting_end_date >= $now) {
-            $query->hunt->voting_open = true;
-            $query->hunt->status = "Voting Open";
-        } else {
-            $query->hunt->voting_open = false;
-        }
-
-        return $query;
-    }
-
     public function deleteFiles($id) {
 
         if (!isset($id)) {
@@ -165,5 +134,63 @@ class PicturesTable extends Table {
         }
 
     }
+    
+    public function findByGame() {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
+            $query = $this->find()
+                ->contain(['Marks.Hunts.Games'])
+                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Games.name' => 'ASC']);
+
+        return $query;
+ 
+    }
+
+    public function findByHunt() {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts'])
+                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Hunts.name' => 'ASC']);
+                
+
+        return $query;
+ 
+    }
+    
+    public function findByMark() {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts'])
+                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Marks.name' => 'ASC']);
+                
+
+        return $query;
+ 
+    }
+    
+    public function findByDate() {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts'])
+                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Pictures.timestamp' => 'DESC']);
+                
+
+        return $query;
+ 
+    }
 }

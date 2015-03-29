@@ -59,7 +59,7 @@ class VotesController extends AppController {
                 'idField' => 'id',
                 'valueField' => 'username'
             ]));
-        $this->set('portraits', $this->Votes->Pictures->find('list'));
+        $this->set('pictures', $this->Votes->Pictures->find('list'));
         $this->set('marks', $this->Votes->Marks->find('list'));
     }
     

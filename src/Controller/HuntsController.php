@@ -76,7 +76,7 @@ class HuntsController extends AppController {
                 $this->Flash->success('The hunt has been saved.');
                 return $this->redirect(['controller' => 'Admin' ,'action' => 'hunts']);
             } else {
-                $this->Flash->error('The hunt could not be saved. Please, try again.');
+                $this->Flash->error('The hunt could not be saved. Please, try again.' . $hunt);
             }
         }
         

@@ -8,6 +8,7 @@
                 <th><?= $this->Paginator->sort('name', 'Name'); ?></th>
                 <th>Body</th>
                 <th>Picture</th>
+                <th>Date</th>
                 <th>Edit</th>
                 <th>Delete?</th>
             </thead>
@@ -20,6 +21,7 @@
                         <?= $this->Html->image('../newspics/' . $article->pic_url . '_100.png') ?>
                         <?php endif ?>
                     </td>
+                    <td><?= $this->Time->format($article->timestamp, 'M/d/Y', 'Not Available', $timezone) ?></td>
                     <td><?= $this->Html->link('Edit', ['controller' => 'News', 'action' => 'adminEdit', $article->id], ['class' => 'btn btn-xs btn-warning']) ?></td>
                     <td><?= $this->Html->link('Delete', ['controller' => 'News', 'action' => 'adminDelete', $article->id], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']); ?></td>
                 </tr>

@@ -18,8 +18,7 @@ class AdminController extends AppController {
         parent::initialize();
 
         $this->loadComponent('Paginator');
-		$this->adminOnly(); /* Testing to see if this will auto-load on all other methods. 
-								I have trust issues with ::initialize. BV */
+	$this->adminOnly(['controller' => 'Admin', 'action' => 'index']);
     }
     
     public function index() {
@@ -63,7 +62,7 @@ class AdminController extends AppController {
     public function marks() {
         
         $this->paginate = [
-            'contain' => ['Hunts', 'Hunts.Games', 'Users'],
+            'contain' => ['Hunts', 'Hunts.Games', 'Pictures.Users'],
             'order' => ['Marks.id' => 'DESC']
         ];
 

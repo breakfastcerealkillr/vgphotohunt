@@ -29,6 +29,7 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->Html->css('vgphotohunt.css') ?>
 
         <?= $this->Html->script('jquery') ?>
+        <?= $this->Html->script('jflash') ?>
         <?= $this->Html->script('bootstrap') ?>
 
 
@@ -36,6 +37,7 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->fetch('script') ?>
     </head>
     <body>
+        <?= $this->Flash->render() ?>
         <div class="page-header cc">
             <div class="row">
                 <div class="col-md-12">
@@ -71,7 +73,6 @@ $cakeDescription = 'VG Photo Hunt';
         </div>
 
         <div class="container maincontainer">
-            <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </div>
         <?= $this->Html->script('popovers') ?>

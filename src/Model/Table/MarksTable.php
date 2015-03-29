@@ -27,7 +27,7 @@ class MarksTable extends Table
         $this->belongsTo('Hunts', [
             'foreignKey' => 'hunt_id'
         ]);
-        $this->belongsTo('Users', [
+        $this->belongsTo('Pictures', [
             'foreignKey' => 'winner_id'
         ]);
         }
@@ -52,4 +52,19 @@ class MarksTable extends Table
         return $validator;
     }
 
+    
+    public function findWinners() {
+         $query = $this->find()
+                ->contain([
+                    'Pictures',
+                    'Pictures.Users' => function ($q) {
+                            return $q
+                            ->select(['username']);}
+                        ])
+                ->where(['winner_id !=' => 'NULL'])
+                ->limit(5)
+                ->order(['RAND()']);
+
+        return $query;
+    }
 }
