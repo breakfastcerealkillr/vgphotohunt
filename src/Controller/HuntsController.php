@@ -24,7 +24,7 @@ class HuntsController extends AppController {
      */
     public function index() {
 
-        $this->set('hunts', $this->Hunts->findWithStatus());
+        
     }
 
     /**
@@ -36,32 +36,23 @@ class HuntsController extends AppController {
      */
     public function view($id = null) {
 
-        $this->loadModel('Pictures');
-
-        $this->set('hunts', $this->Hunts->viewWithStatus($id));
-
-        $this->set('completed', $this->Hunts->completed($id, $this->user_id));
-    }
-
-    public function open($game = null) {
-
-        $this->set('hunts', $this->Hunts->findOpen($game));
-
-        $this->render('index');
-    }
-
-    public function openvotes($game = null) {
-
-        $this->set('hunts', $this->Hunts->findOpenVotes($game));
-
-        $this->render('index');
-    }
-
-    public function archives() {
-
-        $this->set('hunts', $this->Hunts->findWithStatus());
-
-        $this->render('index');
+        if ($id != null) {
+            $hunt = $this->Hunts->get($id);
+            $this->set('hunt', $hunt);
+            $this->set('status', $this->Hunts->getStatus($id));
+            
+            $this->loadModel('Marks');
+            $this->set('marks', $this->Marks->findByHunt($id, $this->user_id));
+            
+        }
+        else {
+            
+            $this->set('openhunts', $this->Hunts->findOpenHunts());
+            $this->set('openvotes', $this->Hunts->findOpenVotes());
+            $this->set('pasthunts', $this->Hunts->findPastHunts());
+            
+        }
+        
     }
 
     public function adminAdd() {

@@ -15,7 +15,7 @@ class PagesController extends AppController {
     public function index() {
         
     $this->loadModel('News');
-    $this->set('news', $this->News->findNewest());
+    $this->set('news', $this->News->findNewest(null, 3));
     
     $this->loadModel('Marks');
     $this->set('winners', $this->Marks->findWinners());

@@ -44,4 +44,5 @@ class GamesTable extends Table
 
         return $validator;
     }
+    
 }

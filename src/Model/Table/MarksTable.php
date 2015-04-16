@@ -24,12 +24,11 @@ class MarksTable extends Table
         $this->table('marks');
         $this->displayField('name');
         $this->primaryKey('id');
-        $this->belongsTo('Hunts', [
-            'foreignKey' => 'hunt_id'
-        ]);
-        $this->belongsTo('Pictures', [
-            'foreignKey' => 'winner_id'
-        ]);
+        $this->belongsTo('Hunts', ['foreignKey' => 'hunt_id']);
+        $this->hasMany('Pictures');
+        $this->hasOne('Winners', [
+            'className' => 'Pictures',
+            'propertyName' => 'winner']);
         }
 
     /**
@@ -51,13 +50,11 @@ class MarksTable extends Table
 
         return $validator;
     }
-
     
     public function findWinners() {
          $query = $this->find()
                 ->contain([
-                    'Pictures',
-                    'Pictures.Users' => function ($q) {
+                    'Winners.Users' => function ($q) {
                             return $q
                             ->select(['username']);}
                         ])
@@ -66,5 +63,35 @@ class MarksTable extends Table
                 ->order(['RAND()']);
 
         return $query;
+    }
+    
+    public function findByHunt($id = null, $user_id = null) {
+        
+
+        
+        $query = $this->find()
+               ->contain(['Hunts',
+                   'Pictures' => function ($q) {
+                    return $q->formatResults(function ($pics) {
+                        return $pics->map(function ($pic) {
+                            
+                            if ($pic['user_id'] === $user_id) {
+                                $pic['completed'] = true;
+                            }
+                            else {$pic['completed'] = false;}
+                            return $pic;
+                            });
+                        });
+                    }])
+                ->order(['Marks.id' => 'ASC']);
+        
+        if ($id != null) {
+            $query->where(['Hunts.id' => $id]);
+        }
+
+        
+        
+        return $query;
+        
     }
 }

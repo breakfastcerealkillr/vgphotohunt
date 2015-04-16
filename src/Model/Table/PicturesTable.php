@@ -135,46 +135,57 @@ class PicturesTable extends Table {
 
     }
     
-    public function findByGame() {
+    public function findByGame($id = null) {
         
             $currentTime = Time::parse('now');
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
             $query = $this->find()
                 ->contain(['Marks.Hunts.Games'])
-                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Games.name' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Games.id' => $id]);
+            }
 
         return $query;
  
     }
 
-    public function findByHunt() {
+    public function findByHunt($id = null) {
         
             $currentTime = Time::parse('now');
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
+
             $query = $this->find()
                 ->contain(['Marks.Hunts'])
-                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Hunts.name' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Hunts.id' => $id]);
+            }
                 
-
         return $query;
  
     }
     
-    public function findByMark() {
+    public function findByMark($id = null) {
         
             $currentTime = Time::parse('now');
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
             $query = $this->find()
                 ->contain(['Marks.Hunts'])
-                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Marks.name' => 'ASC']);
                 
-
+            if (isset($id)) {
+                $query->where(['Marks.id' => $id]);
+            }
+            
         return $query;
  
     }
@@ -186,7 +197,7 @@ class PicturesTable extends Table {
 
             $query = $this->find()
                 ->contain(['Marks.Hunts'])
-                ->Where(['Hunts.voting_end_date <=' => $now])
+                ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Pictures.timestamp' => 'DESC']);
                 
 

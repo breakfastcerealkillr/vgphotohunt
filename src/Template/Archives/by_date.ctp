@@ -6,7 +6,7 @@
             <?php endforeach; ?>
     </div>
 </div>
-<?php if ($this->Paginator->counter('{{count}}') > 3) {echo $this->element('paginator');} ?>
+<?php if ($this->Paginator->counter('{{count}}') > 30) {echo $this->element('paginator');} ?>
 <?= $this->Paginator->counter([
     'format' => 'Page {{page}} of {{pages}}, showing {{current}} records out of
              {{count}} total, starting on record {{start}}, ending on {{end}}'

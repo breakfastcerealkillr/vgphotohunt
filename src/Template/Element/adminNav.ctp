@@ -1,5 +1,3 @@
-<div class="row" style="margin-bottom: 10px;">
-    <div class="col-md-10">
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group" role="group">
         <?= $this->Html->link('Games', ['controller' => 'Admin', 'action' => 'games'], ['class' => 'btn btn-default']) ?>
@@ -17,10 +15,5 @@
         <?= $this->Html->link('News Comments', ['controller' => 'Admin', 'action' => 'newsComments'], ['class' => 'btn btn-default']) ?>
         <?= $this->Html->link('Portraits', ['controller' => 'Admin', 'action' => 'portraits'], ['class' => 'btn btn-default']) ?>
         <?= $this->Html->link('Awards', ['controller' => 'Admin', 'action' => 'awards'], ['class' => 'btn btn-default']) ?>
-    </div>
-</div>
-        
-        
-        
     </div>
 </div>

@@ -26,6 +26,7 @@ class HuntsTable extends Table {
         $this->displayField('name');
         $this->primaryKey('id');
         $this->belongsTo('Games', ['foreignKey' => 'game_id']);
+        $this->hasMany('Marks', ['foreignKey' => 'hunt_id']);
     }
 
     /**
@@ -73,138 +74,176 @@ class HuntsTable extends Table {
         
 
     }
-    
-    public function findWithStatus() {
 
-        $query = $this->find();
-
-        $query->contain('Games');
-
-        $results = $this->statusParse($query);
-
-        return $results;
-    }
-
-    public function findOpenHunts($limit = null) {
+    public function findOpenHunts($id = null) {
         
-
         $currentTime = Time::parse('now');
         
         $query = $this->find()
-                ->contain(['Games'])
-                ->where(['start_date <=' => $currentTime])
-                ->andWhere(['end_date >=' => $currentTime])
-                ->limit($limit) 
+                ->contain(['Games', 'Marks'])
+                ->where(['start_date <=' => $currentTime, 'end_date >=' => $currentTime])
                 ->order(['start_date' => 'ASC']);
-
+        if ($id != null) {
+            $query->where(['Games.id' => $id]);
+        }
+        
         return $query;
         
     }
 
-    public function findOpenVotes($limit = null) {
+    public function findOpenVotes($id = null) {
 
         $currentTime = Time::parse('now');
         
         $query = $this->find()
-                ->contain(['Games'])
+                ->contain(['Games', 'Marks'])
                 ->where(['voting_start_date <=' => $currentTime])
                 ->andWhere(['voting_end_date >=' => $currentTime])
-                ->limit($limit) 
                 ->order(['start_date' => 'ASC']);
+        
+        if ($id != null) {
+            $query->where(['Games.id' => $id]);
+        }
 
         return $query;
 
     }
-
-    private function statusParse($query) {
-
-        if (!isset($query)) {
-            return false;
+    
+    public function findPastHunts($id = null) {
+        
+        $currentTime = Time::parse('now');
+        
+        $query = $this->find()
+                ->contain(['Games', 'Marks'])
+                ->where(['voting_end_date <=' => $currentTime])
+                ->order(['start_date' => 'ASC']);
+        
+        if ($id != null) {
+            $query->where(['Games.id' => $id]);
         }
-
-        $query->formatResults(function (\Cake\Datasource\ResultSetInterface $results) {
-            return $results->map(function ($row) {
-
-                        $now = Time::parse('now');
-
-                        if ($row['start_date'] <= $now && $row['end_date'] >= $now) {
-                            $row['hunt_open'] = true;
-                            $row['status'] = "Hunt Open";
-                        } else {
-                            $row['hunt_open'] = false;
-                        }
-
-                        if ($row['voting_start_date'] <= $now && $row['voting_end_date'] >= $now) {
-                            $row['voting_open'] = true;
-                            $row['status'] = "Voting Open";
-                        } else {
-                            $row['voting_open'] = false;
-                        }
-
-                        return $row;
-                    });
-        });
-
         return $query;
     }
-
-    public function viewWithStatus($id) {
-
-        if (!isset($id)) {
-            return false;
-        }
-
-        $query = $this
-                ->find()
-                ->contain('Pictures.Users')
-                ->where(['Hunts.id' => $id])
-                ->first();
-
+    
+    public function getStatus($id) {
+        // Only called on a single entity, rather than a map/reduce on a whole table.
+        // Can't tell which one is more 'useful', in the context of this app, though...
         $now = Time::parse('now');
-
+        
+        $query = $this
+                ->find()->where(['Hunts.id' => $id])
+                ->first();
+            
         if ($query['start_date'] <= $now && $query['end_date'] >= $now) {
-            $query['hunt_open'] = true;
-            $query['status'] = "Game Open";
-        } else {
-            $query['hunt_open'] = false;
-        }
+              $status = "open";} 
+        else {$status = "closed";}
 
         if ($query['voting_start_date'] <= $now && $query['voting_end_date'] >= $now) {
-            $query['voting_open'] = true;
-            $query['status'] = "Voting Open";
-        } else {
-            $query['voting_open'] = false;
-        }
+              $status = "vote";} 
+        else {$status = "closed";}
 
-        return $query;
+        return $status;
     }
-
-    /*
-     * This checks if the user has completed a hunt
-     */
-
-    public function completed($id, $user_id) {
-
-        if (!isset($id) || !isset($user_id)) {
-            return false;
-        }
-
-        $this->Pictures = TableRegistry::get('Pictures');
-
-        $pictures = $this
-                ->Pictures
-                ->find()
-                ->where([
-                    'Pictures.user_id' => $user_id,
-                    'Pictures.hunt_id' => $id
-                ])
-                ->count();
-
-        if ($pictures >= 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        
+//    public function findWithStatus() {
+//
+//        $query = $this->find();
+//
+//        $query->contain('Games');
+//
+//        $results = $this->statusParse($query);
+//
+//        return $results;
+//    }
+//
+//    private function statusParse($query) {
+//
+//        if (!isset($query)) {
+//            return false;
+//        }
+//
+//        $query->formatResults(function (\Cake\Datasource\ResultSetInterface $results) {
+//            return $results->map(function ($row) {
+//
+//                        $now = Time::parse('now');
+//
+//                        if ($row['start_date'] <= $now && $row['end_date'] >= $now) {
+//                            $row['hunt_open'] = true;
+//                            $row['status'] = "Hunt Open";
+//                        } else {
+//                            $row['hunt_open'] = false;
+//                        }
+//
+//                        if ($row['voting_start_date'] <= $now && $row['voting_end_date'] >= $now) {
+//                            $row['voting_open'] = true;
+//                            $row['status'] = "Voting Open";
+//                        } else {
+//                            $row['voting_open'] = false;
+//                        }
+//
+//                        return $row;
+//                    });
+//        });
+//
+//        return $query;
+//    }
+//
+//    public function viewWithStatus($id) {
+//
+//        if (!isset($id)) {
+//            return false;
+//        }
+//
+//        $query = $this
+//                ->find()
+//                ->contain('Pictures.Users')
+//                ->where(['Hunts.id' => $id])
+//                ->first();
+//
+//        $now = Time::parse('now');
+//
+//        if ($query['start_date'] <= $now && $query['end_date'] >= $now) {
+//            $query['hunt_open'] = true;
+//            $query['status'] = "Game Open";
+//        } else {
+//            $query['hunt_open'] = false;
+//        }
+//
+//        if ($query['voting_start_date'] <= $now && $query['voting_end_date'] >= $now) {
+//            $query['voting_open'] = true;
+//            $query['status'] = "Voting Open";
+//        } else {
+//            $query['voting_open'] = false;
+//        }
+//
+//        return $query;
+//    }
+//
+//    /*
+//     * This checks if the user has completed a hunt
+//     */
+//
+//    public function completed($id, $user_id) {
+//
+//        if (!isset($id) || !isset($user_id)) {
+//            return false;
+//        }
+//
+//        $this->Pictures = TableRegistry::get('Pictures');
+//
+//        $pictures = $this
+//                ->Pictures
+//                ->find()
+//                ->where([
+//                    'Pictures.user_id' => $user_id,
+//                    'Pictures.hunt_id' => $id
+//                ])
+//                ->count();
+//
+//        if ($pictures >= 1) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
 }

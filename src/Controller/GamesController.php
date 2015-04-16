@@ -64,4 +64,23 @@ class GamesController extends AppController {
 
         return $this->redirect($this->referer());    
     }
+    
+    public function view($id = null) {
+        
+        if ($id != null) {
+            $game = $this->Games->get($id);
+            $this->set('game', $game);
+            
+            $this->loadModel('Hunts');
+            $this->set('openhunts', $this->Hunts->findOpenHunts($id));
+            $this->set('openvotes', $this->Hunts->findOpenVotes($id));
+            $this->set('pasthunts', $this->Hunts->findPastHunts($id));
+            
+            $this->loadModel('Pictures');
+            $this->set('pics', $this->Pictures->findByGame($id));
+        }
+        else {
+            $this->set('list', $this->Games->find('all'));
+        }
+    }
 }

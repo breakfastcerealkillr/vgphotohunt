@@ -116,10 +116,18 @@ class NewsTable extends Table {
         return imagepng($image_p, $save_path, 0);
     }
 
-    public function findNewest() {
+    public function findNewest($id = null, $limit = null) {
         $query = $this->find()
-                ->limit(3)
+                ->contain(['Users'])
                 ->order(['timestamp' => 'DESC']);
+        
+        if ($id != null) {
+            $query->where(['News.id' => $id])
+            ->contain('NewsComments.Users');
+        }
+        if ($limit != null) {
+            $query->limit($limit);
+        }
 
         return $query;
     }

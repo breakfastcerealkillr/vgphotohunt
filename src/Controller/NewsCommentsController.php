@@ -16,6 +16,21 @@ class NewsCommentsController extends AppController {
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
+    
+    public function add() {
+        $nc = $this->NewsComments->newEntity();
+
+        if ($this->request->is('post')) {
+            $nc = $this->NewsComments->patchEntity($nc, $this->request->data);
+            if ($this->NewsComments->save($nc)) {
+                $this->Flash->success('The comment has been saved.');
+                return $this->redirect($this->referer());
+            } else {
+                $this->Flash->error('The comment could not be saved. Please, try again.');
+            }
+        }
+    }
+    
     public function adminAdd() {
         
 	$this->adminOnly();

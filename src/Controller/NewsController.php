@@ -9,7 +9,7 @@ use App\Controller\AppController;
  *
  * @property \App\Model\Table\newsTable $news
  */
-class newsController extends AppController {
+class NewsController extends AppController {
 
     /**
      * Add method
@@ -20,11 +20,11 @@ class newsController extends AppController {
         
 		$this->adminOnly();
 
-        $news = $this->news->newEntity();
+        $news = $this->News->newEntity();
 
         if ($this->request->is('post')) {
-            $news = $this->news->patchEntity($news, $this->request->data);
-            if ($this->news->save($news)) {
+            $news = $this->News->patchEntity($news, $this->request->data);
+            if ($this->News->save($news)) {
                 $this->Flash->success('The news has been saved.');
                 return $this->redirect(['controller' => 'Admin' ,'action' => 'news']);
             } else {
@@ -38,10 +38,10 @@ class newsController extends AppController {
 
 		$this->adminOnly();
 
-        $news = $this->news->get($id);
+        $news = $this->News->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $news = $this->news->patchEntity($news, $this->request->data);
-            if ($this->news->save($news)) {
+            $news = $this->News->patchEntity($news, $this->request->data);
+            if ($this->News->save($news)) {
                 $this->Flash->success('Saved!');
                 return $this->redirect(['action' => 'adminEdit', $id]);
             } else {
@@ -55,8 +55,8 @@ class newsController extends AppController {
 
 	$this->adminOnly();
 
-        $entity = $this->news->get($id);
-        if ($this->news->delete($entity)) {
+        $entity = $this->News->get($id);
+        if ($this->News->delete($entity)) {
             $this->Flash->success('Deleted!');
         } else {
             $this->Flash->error('Failed!');
@@ -68,7 +68,7 @@ class newsController extends AppController {
     public function deleteNewsPic($id = null) {
 
         
-        $newspic = $this->news->get($id);
+        $newspic = $this->News->get($id);
 
         foreach (glob('newspics/' . $newspic->pic_url . '*') as $file) {
             unlink($file);
@@ -77,7 +77,7 @@ class newsController extends AppController {
 
         $newspic->pic_url = null;
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $newspic = $this->news->patchEntity($newspic, $this->request->data);
+            $newspic = $this->News->patchEntity($newspic, $this->request->data);
             if ($this->News->save($newspic)) {
                 $this->Flash->success('Deleted!');
             } else {
@@ -87,4 +87,11 @@ class newsController extends AppController {
         return $this->redirect($this->referer());
         
     }
+    
+    public function view($id = null) {
+        
+            $this->set('news', $this->News->findNewest($id));
+ 
+    }
+    
 }

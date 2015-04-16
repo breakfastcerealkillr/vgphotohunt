@@ -62,7 +62,7 @@ class AdminController extends AppController {
     public function marks() {
         
         $this->paginate = [
-            'contain' => ['Hunts', 'Hunts.Games', 'Pictures.Users'],
+            'contain' => ['Hunts', 'Hunts.Games', 'Winners.Users'],
             'order' => ['Marks.id' => 'DESC']
         ];
 
