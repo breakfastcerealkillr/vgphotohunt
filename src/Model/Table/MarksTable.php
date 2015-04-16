@@ -65,9 +65,13 @@ class MarksTable extends Table
         return $query;
     }
     
-    public function findByHunt($id = null, $user_id = null) {
+    public function findByHunt($id = null, $currentUserId) {
         
-
+        if (!isset($currentUserId)) {
+            return false;
+        }
+        
+        $this->currentUserId = $currentUserId
         
         $query = $this->find()
                ->contain(['Hunts',
@@ -75,7 +79,7 @@ class MarksTable extends Table
                     return $q->formatResults(function ($pics) {
                         return $pics->map(function ($pic) {
                             
-                            if ($pic['user_id'] === $user_id) {
+                            if ($pic['user_id'] === $this->currentUserId) {
                                 $pic['completed'] = true;
                             }
                             else {$pic['completed'] = false;}
@@ -89,8 +93,6 @@ class MarksTable extends Table
             $query->where(['Hunts.id' => $id]);
         }
 
-        
-        
         return $query;
         
     }
