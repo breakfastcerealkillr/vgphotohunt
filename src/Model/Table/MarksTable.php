@@ -25,10 +25,14 @@ class MarksTable extends Table
         $this->displayField('name');
         $this->primaryKey('id');
         $this->belongsTo('Hunts', ['foreignKey' => 'hunt_id']);
-        $this->hasMany('Pictures');
-        $this->hasOne('Winners', [
+        $this->belongsTo('Winners', [
             'className' => 'Pictures',
-            'propertyName' => 'winner']);
+            'foreignKey' => 'winner_id',
+            'propertyName' => 'banana']);
+        $this->hasMany('Submissions', [
+            'className' => 'Pictures',
+            'foreignKey' => 'mark_id',
+            'propertyName' => 'submissions']);
         }
 
     /**
@@ -54,7 +58,7 @@ class MarksTable extends Table
     public function findWinners() {
          $query = $this->find()
                 ->contain([
-                    'Winners.Users' => function ($q) {
+                    'Pictures.Users' => function ($q) {
                             return $q
                             ->select(['username']);}
                         ])
@@ -65,30 +69,26 @@ class MarksTable extends Table
         return $query;
     }
     
-    public function findByHunt($id = null, $currentUserId) {
-        
-        if (!isset($currentUserId)) {
-            return false;
-        }
-        
-        $this->currentUserId = $currentUserId
-        
+    public function findByHunt($id = null, $submissionId = null) {
+          
         $query = $this->find()
-               ->contain(['Hunts',
+               ->contain(['Hunts'])
+                ->order(['Marks.id' => 'ASC']);
+        if ($submissionId != null) {
+            $this->currentUserId = $submissionId;
+            $query->contain([
                    'Pictures' => function ($q) {
                     return $q->formatResults(function ($pics) {
                         return $pics->map(function ($pic) {
-                            
-                            if ($pic['user_id'] === $this->currentUserId) {
-                                $pic['completed'] = true;
-                            }
+                            if (isset($this->currentUserId) && $pic['user_id'] == $this->currentUserId) {
+                                  $pic['completed'] = true;}
                             else {$pic['completed'] = false;}
                             return $pic;
                             });
                         });
-                    }])
-                ->order(['Marks.id' => 'ASC']);
-        
+                    }]);
+            
+        }
         if ($id != null) {
             $query->where(['Hunts.id' => $id]);
         }

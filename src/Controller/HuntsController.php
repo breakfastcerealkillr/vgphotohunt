@@ -36,6 +36,11 @@ class HuntsController extends AppController {
      */
     public function view($id = null) {
 
+        $userdata = $this->Auth->user();
+
+        $this->user_id = $userdata['id'];
+        
+        
         if ($id != null) {
             $hunt = $this->Hunts->get($id);
             $this->set('hunt', $hunt);
