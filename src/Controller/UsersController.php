@@ -32,37 +32,23 @@ class UsersController extends AppController {
     public function view($id = null) {
 
         $this->loadModel('Pictures');
-
-        $user = $this->Users->get($id, [
-            'contain' => ['Pictures']
-        ]);
+        $this->loadModel('Marks');
+        $this->loadModel('Votes');
+        $this->loadModel('PictureComments');
+        $this->loadModel('NewsComments');
+        
+        $user = $this->Users->get($id);
         $this->set('user', $user);
-        $this->set('_serialize', ['user']);
+        
+        $this->set('latest', $this->Pictures->findByUser($id));
 
-        $pictures_count = $this->Pictures->find()->where(['Pictures.user_id' => $id])->count();
-        $this->set('pictures_count', $pictures_count);
+        // Aggregates, yay!
+        $this->set('pictures_count', $this->Pictures->find()->where(['Pictures.user_id' => $id])->count());
+        $this->set('wins', $this->Marks->findWins($id)->count());
+        $this->set('totalvotes', $this->Votes->find()->where(['Votes.user_id' => $id])->count());
+        $this->set('totalcomments', $this->PictureComments->find()->where(['user_id' => $id])->count() + $this->NewsComments->find()->where(['user_id' => $id])->count());
+        $this->set('sumvotes', $this->Pictures->tallyVotes($id));
     }
-
-    /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
-     */
-//    public function add() {
-//        $user = $this->Users->newEntity();
-//        if ($this->request->is('post')) {
-//            $user = $this->Users->patchEntity($user, $this->request->data);
-//            if ($this->Users->save($user)) {
-//                $this->Flash->success('The user has been saved.');
-//                return $this->redirect(['action' => 'index']);
-//            } else {
-//                $this->Flash->error('The user could not be saved. Please, try again.');
-//            }
-//        }
-//        $steams = $this->Users->Steams->find('list', ['limit' => 200]);
-//        $this->set(compact('user', 'steams'));
-//        $this->set('_serialize', ['user']);
-//    }
 
     /**
      * Edit method
@@ -88,6 +74,7 @@ class UsersController extends AppController {
             }
         }
         $this->set('user', $user);
+        $this->set('awards', $this->Users->Awards->findPortraits($id));
     }
 
     /**
@@ -133,7 +120,7 @@ class UsersController extends AppController {
     }
 
     public function register() {
-
+        
         $this->loadComponent('Password');
 
         $user = $this->Users->newEntity();
@@ -184,9 +171,9 @@ class UsersController extends AppController {
         }
     }
     
-    public function adminEdit($id = null) {
+    public function adminEdit($id) {
 
-		$this->adminOnly();
+        $this->adminOnly();
 
         $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -241,6 +228,7 @@ class UsersController extends AppController {
         return $this->redirect($this->referer());
     }
     
-
-
+    public function forgotPass() {
+    //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp
+    }
 }

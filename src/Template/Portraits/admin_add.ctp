@@ -6,7 +6,8 @@
         <?= $this->Form->input('name') ?>
         <?= $this->Form->input('description') ?>
         <?= $this->Form->hidden('pic_url') ?>
-        <?= $this->Form->input('file', ['type' => 'file', 'label' => 'Upload Picture']); ?>
+        <?= $this->Form->input('file', ['type' => 'file', 'label' => 'Upload Portrait Image']); ?>
+        <?= $this->Form->input('file2', ['type' => 'file', 'label' => 'Upload Comment Portrait']); ?>
         <?= $this->Form->button('Submit') ?>
         <?= $this->Form->end() ?>
     </div>

@@ -46,7 +46,6 @@ class MarksController extends AppController {
         $this->set('hunts', $this->Marks->Hunts->find('list', [
                 'idField' => 'id',
                 'valueField' => 'name',
-            //    'groupField' => 'game_id'  Doesn't work. Can't figure out why. BV 2/16
             ]));
         
     }
@@ -84,6 +83,18 @@ class MarksController extends AppController {
         }
 
         return $this->redirect($this->referer());
+        
+    }
+    
+    //UNTESTED CODE
+    //Used to patch in mark data for winners and award users.
+    public function resolveMarks() {
+        
+        $marks = $this->Marks->findUnresolved()->all();
+        $echo = $this->Marks->markResolver($marks);
+        
+        
+        $this->set('echo', $echo);
         
     }
     

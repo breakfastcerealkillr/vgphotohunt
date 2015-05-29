@@ -94,4 +94,8 @@ class NewsController extends AppController {
  
     }
     
+    public function index() {
+        $this->set('news', $this->News->findNewest());
+    }
+    
 }

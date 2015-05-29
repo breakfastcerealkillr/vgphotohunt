@@ -19,8 +19,8 @@
         </thead>
             <?php foreach ($hunts as $hunt): ?>
                 <tr>
-                    <td><?= $this->Html->link($hunt->id, ['action' => 'huntView', $hunt->id]) ?></td>
-                    <td><?= $this->Html->link($hunt->game->name, ['action' => 'gameView', $hunt->game->id]) ?></td>
+                    <td><?= $this->Html->link($hunt->id, ['controller' => 'Hunts','action' => 'view', $hunt->id]) ?></td>
+                    <td><?= $this->Html->link($hunt->game->name, ['controller' => 'Games','action' => 'view', $hunt->game->id]) ?></td>
                     <td><?= $hunt->name ?></td>
                     <td><?= $hunt->description ?></td>
                     <td><?= $this->Time->format($hunt->start_date, 'M/d/Y', 'Start Date Not Set', $timezone) ?></td>

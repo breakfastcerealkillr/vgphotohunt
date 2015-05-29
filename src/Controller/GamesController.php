@@ -83,4 +83,24 @@ class GamesController extends AppController {
             $this->set('list', $this->Games->find('all'));
         }
     }
+    
+    public function deleteGamePic($id = null) {
+
+        $gamepic = $this->Games->get($id);
+
+        foreach (glob('gamepics/' . $gamepic->pic_url . '*') as $file) {
+            unlink($file);
+            debug($file);
+        }
+
+        $gamepic->pic_url = 'default';
+
+        if ($this->Games->save($gamepic)) {
+            $this->Flash->success('Deleted!');
+        } else {
+            $this->Flash->error('Failed!');
+        }
+
+        return $this->redirect($this->referer());
+    }
 }

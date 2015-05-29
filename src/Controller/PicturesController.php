@@ -11,80 +11,6 @@ use App\Controller\AppController;
  */
 class PicturesController extends AppController {
 
-    /**
-     * View method
-     *
-     * @param string|null $id Picture id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view($id = null) {
-        $picture = $this->Pictures->viewWithStatus($id);
-        $this->set('picture', $picture);
-    }
-
-    /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
-     */
-    public function add() {
-        $picture = $this->Pictures->newEntity();
-        if ($this->request->is('post')) {
-            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
-            if ($this->Pictures->save($picture)) {
-                $this->Flash->success('The picture has been saved.');
-            } else {
-                $this->Flash->error('The picture could not be saved. Please, try again.');
-            }
-            return $this->redirect($this->referer());
-        }
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Picture id.
-     * @return void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null) {
-        $picture = $this->Pictures->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
-            if ($this->Pictures->save($picture)) {
-                $this->Flash->success('The picture has been saved.');
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error('The picture could not be saved. Please, try again.');
-            }
-        }
-        $users = $this->Pictures->Users->find('list', ['limit' => 200]);
-        $sets = $this->Pictures->Sets->find('list', ['limit' => 200]);
-        $this->set(compact('picture', 'users', 'sets'));
-        $this->set('_serialize', ['picture']);
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Picture id.
-     * @return void Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function delete($id = null) {
-        $this->request->allowMethod(['post', 'delete']);
-        $picture = $this->Pictures->get($id);
-        if ($this->Pictures->delete($picture)) {
-            $this->Flash->success('The picture has been deleted.');
-        } else {
-            $this->Flash->error('The picture could not be deleted. Please, try again.');
-        }
-        return $this->redirect(['action' => 'index']);
-    }
-
     public function adminAdd() {
         
 	$this->adminOnly();
@@ -139,5 +65,26 @@ class PicturesController extends AppController {
             return $this->redirect($this->referer());
         }
     }
+    public function addSub() {
 
+        $picture = $this->Pictures->newEntity();
+        
+        if ($this->request->is('post') && $this->request->data['user_id'] == $this->user_id) {
+            $picture = $this->Pictures->patchEntity($picture, $this->request->data);
+            if ($this->Pictures->save($picture)) {
+                $added = $this->Pictures->Users->addXP($this->user_id, 5);
+                if ($added == 1) {
+                 $this->Flash->success('The picture has been saved.');
+                }
+                elseif ($added == 2) {
+                 $this->Flash->levelup('Grats! You\'ve leveled up!'); 
+                }
+                return $this->redirect($this->referer());
+            } else {
+                $this->Flash->error('The picture could not be saved. Please, try again.');
+                return $this->redirect($this->referer());
+            }
+        } 
+    }
+    
 }

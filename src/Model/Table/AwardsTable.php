@@ -51,4 +51,27 @@ class AwardsTable extends Table
 
         return $validator;
     }
+    // Find possible portraits based on awards given.
+    public function findPortraits($id) {
+        $query = $this->find()
+                ->contain(['Portraits'])
+                ->where(['user_id' => $id]);
+        
+        $combined = $query->combine('portrait.pic_url', 'portrait.name');
+        return $combined;
+    }
+    
+    public function addAward($uid, $pid) {
+        
+        $award = $this->newEntity();
+        $award->user_id = $uid;
+        $award->portrait_id = $pid;
+        $award->timestamp = Time::now();
+        
+        if ($this->save($award)) {
+                return true;
+        } else {
+                return false;
+            }
+        }
 }

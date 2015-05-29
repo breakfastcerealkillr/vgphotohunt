@@ -55,48 +55,22 @@ class PortraitsTable extends Table
             }
         }
 
-        if (empty($entity->file['tmp_name'])) {
+        if (empty($entity->file['tmp_name']) && empty($entity->file2['tmp_name'])) {
             return true;
         }
 
         $entity->pic_url = Text::uuid();
 
         $full_image_name = 'portraits/' . $entity->pic_url . '.png';
-
+        $comment_image_name = 'portraits/' . $entity->pic_url . '_small.png';
         if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
             return false;
         }
-
-        $thumb100 = 'portraits/' . $entity->pic_url . '_100.png';
-        $thumb60 = 'portraits/' . $entity->pic_url . '_60.png';
-
-        $this->scale($full_image_name, $thumb100, 100);
-        $this->scale($full_image_name, $thumb60, 60);
+        if (!imagepng(imagecreatefromstring(file_get_contents($entity->file2['tmp_name'])), $comment_image_name)) {
+            return false;
+        }
 
         return true;
     }
 
-    private function scale($filename, $save_path, $size) {
-
-        $width = $size;
-        $height = $size;
-
-        list($width_orig, $height_orig) = getimagesize($filename);
-
-        $ratio_orig = $width_orig / $height_orig;
-
-        if ($width / $height > $ratio_orig) {
-            $width = $height * $ratio_orig;
-        } else {
-            $height = $width / $ratio_orig;
-        }
-
-
-        $image_p = imagecreatetruecolor($width, $height);
-        $image = imagecreatefrompng($filename);
-        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-
-
-        return imagepng($image_p, $save_path, 0);
-    }
 }

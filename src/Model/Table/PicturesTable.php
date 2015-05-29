@@ -141,12 +141,30 @@ class PicturesTable extends Table {
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
             $query = $this->find()
-                ->contain(['Marks.Hunts.Games'])
+                ->contain(['Marks.Hunts.Games', 'PictureComments.Users'])
                 ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Games.name' => 'ASC']);
             
             if (isset($id)) {
                 $query->where(['Games.id' => $id]);
+            }
+
+        return $query;
+ 
+    }
+    
+    public function findByUser($id = null) {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Users','Marks.Hunts', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Users.username' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Users.id' => $id]);
             }
 
         return $query;
@@ -160,7 +178,7 @@ class PicturesTable extends Table {
 
 
             $query = $this->find()
-                ->contain(['Marks.Hunts'])
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
                 ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Hunts.name' => 'ASC']);
             
@@ -178,7 +196,7 @@ class PicturesTable extends Table {
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
             $query = $this->find()
-                ->contain(['Marks.Hunts'])
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
                 ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Marks.name' => 'ASC']);
                 
@@ -196,12 +214,39 @@ class PicturesTable extends Table {
             $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
 
             $query = $this->find()
-                ->contain(['Marks.Hunts'])
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
                 ->where(['Hunts.voting_end_date <=' => $now])
                 ->order(['Pictures.timestamp' => 'DESC']);
                 
-
         return $query;
  
     }
+    
+    public function rankVotes($mid, $limit = null) {
+        $query = $this->find()
+            ->contain([
+                'Marks',
+                'Users' => function ($q) {
+                    return $q
+                    ->select(['id', 'username']);}])
+            ->where(['Marks.id' => $mid])
+            ->order(['Pictures.vote_count' => 'DESC', 'Pictures.id' => 'ASC'])
+            ->limit($limit);
+
+        return $query;
+    }
+    
+    public function tallyVotes($uid) {
+        $total = 0;
+        $query = $this->find()
+            ->where(['user_id' => $uid])
+            ->all();
+        
+        foreach($query as $pic) {
+            $total += $pic->vote_count;
+        }
+        
+        return $total;
+    }
+
 }

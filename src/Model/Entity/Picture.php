@@ -19,6 +19,7 @@ class Picture extends Entity
         'mark_id' => true,
         'guid' => true,
         'timestamp' => true,
+        'caption' => true,
         'file' => true
     ];
 }

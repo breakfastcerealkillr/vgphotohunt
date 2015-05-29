@@ -13,7 +13,7 @@
             </thead>
             <?php foreach ($awards as $award): ?>
                 <tr>
-                    <td><?= $this->Html->link($award->id, ['controller' => 'awards', 'action' => 'adminEdit', $award->id]) ?></td>
+                    <td><?= $this->Html->link($award->id, ['controller' => 'Awards', 'action' => 'adminEdit', $award->id]) ?></td>
                     <td><?= $award->user->username ?></td>
                     <td><?= $award->portrait->name ?></td>
                     <td><?= $this->Time->format($award->timestamp, 'M/d/Y', 'Undefined', $timezone) ?></td>

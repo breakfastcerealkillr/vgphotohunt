@@ -15,10 +15,12 @@
             </thead>
             <?php foreach ($marks as $mark): ?>
                 <tr>
-                    <td><?= $this->Html->link($mark->id, ['controller' => 'Marks', 'action' => 'view', $mark->id]) ?></td>
-                    <td><?= $this->Html->link($mark->hunt->game->name, ['controller' => 'Games', 'action' => 'view', $mark->hunt->game->id]) ?> - <?= $this->Html->link($mark->hunt->name, ['controller' => 'Hunts', 'action' => 'view', $mark->hunt->id]) ?></td>
+                    <td><?= $this->Html->link($mark->id, ['controller' => 'Hunts', 'action' => 'view', $mark->hunt_id]) ?></td>
+                    <td><span class="badge"><?= $this->Html->link($mark->hunt->game->short_name, ['controller' => 'Games', 'action' => 'view', $mark->hunt->game->id]) ?></span> - <?= $this->Html->link($mark->hunt->name, ['controller' => 'Hunts', 'action' => 'view', $mark->hunt->id]) ?></td>
                     <td><?= $mark->name ?></td>
-                    <td><?php if ($mark->winner_id != null){echo $mark->winner_id;} ?></td>
+                    <td><?php if ($mark->winner_id === 0){echo 'None';} 
+                                elseif($mark->winner_id === null) {echo 'Ongoing';}
+                                    else {echo $mark->winner_id;} ?></td>
                     <td><?= $this->Html->link('Edit', ['controller' => 'Marks', 'action' => 'adminEdit', $mark->id], ['class' => 'btn btn-xs btn-warning']) ?></td>
                     <td><?= $this->Html->link('Delete', ['controller' => 'Marks', 'action' => 'adminDelete', $mark->id], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']); ?></td>
                 </tr>

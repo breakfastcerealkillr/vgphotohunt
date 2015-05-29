@@ -38,6 +38,27 @@ class AdminController extends AppController {
 
     public function dashboard() {
         
+        // There might be a better way to do this....
+        $this->loadModel('Users');
+        $this->loadModel('Games');
+        $this->loadModel('Hunts');
+        $this->loadModel('Marks');
+        $this->loadModel('Pictures');
+        $this->loadModel('Votes');
+        $this->loadModel('PictureComments');
+        
+        $this->set('totalusers', $this->Users->find('all')->count());
+        $this->set('totalpics', $this->Pictures->find('all')->count());
+        $this->set('totalgames', $this->Games->find('all')->count());
+        $this->set('totalhunts', $this->Hunts->find('all')->count());
+        $this->set('totalmarks', $this->Marks->find('all')->count());
+        $this->set('totalvotes', $this->Votes->find('all')->count());
+        $this->set('totalcomments', $this->PictureComments->find('all')->count());
+        
+        $this->set('topfive', $this->Users->find('all')->limit(5)->order(['level' => 'DESC', 'XP' => 'DESC']));
+        
+        $this->set('unresolved', $this->Marks->findUnresolved()->count());
+        
     }
 
     public function games() {
@@ -62,7 +83,7 @@ class AdminController extends AppController {
     public function marks() {
         
         $this->paginate = [
-            'contain' => ['Hunts', 'Hunts.Games', 'Submissions.Users', 'Winners'],
+            'contain' => ['Submissions.Users', 'Hunts.Games', 'Pictures'],
             'order' => ['Marks.id' => 'DESC']
         ];
 

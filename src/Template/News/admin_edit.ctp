@@ -7,7 +7,7 @@
         <h2><?= $news->id ?> - <?= $news->title ?></h2>
         <?= $this->Form->create('adminEdit', ['type' => 'file']) ?>
         <?= $this->Form->input('title', ['label' => 'Title', 'default' => $news->title]) ?>
-        <?= $this->Form->input('body', ['label' => 'Body', 'default' => $news->body]) ?>
+        <?= $this->Form->textarea('body', ['label' => 'Body', 'default' => $news->body]) ?>
         <?= $this->Form->input('timestamp', ['label' => 'Date Time', 'id' => 'datepicker', 'default' => $this->Time->format($news->timestamp, 'yyyy-MM-dd HH:mm:ss', null)]) ?>
         <?php if (!empty($news->pic_url)): ?>
             <?= $this->Html->image('../newspics/' . $news->pic_url . '_100.png') ?>

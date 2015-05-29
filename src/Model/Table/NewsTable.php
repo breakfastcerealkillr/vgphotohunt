@@ -44,7 +44,8 @@ class NewsTable extends Table {
                 ->allowEmpty('id', 'create')
                 ->add('user_id', 'valid', ['rule' => 'numeric'])
                 ->requirePresence('user_id', 'create')
-                ->notEmpty('user_id');
+                ->notEmpty('user_id')
+                ->requirePresence('file', 'create');
 
         return $validator;
     }

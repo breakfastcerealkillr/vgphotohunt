@@ -83,9 +83,11 @@ class UsersTable extends Table {
     }
 
      public function beforeMarshal(Event $event, ArrayObject $data) {
-        if (empty($data['password'])) {
-            unset($data['password']);
-        } 
+        if (isset($data['password'])) {
+            if (empty($data['password'])) {
+                unset($data['password']);
+            } 
+        }
      }
      
     public function beforeSave($event, $entity) {
@@ -158,6 +160,82 @@ class UsersTable extends Table {
         } else {
             return false;
         }
+    }
+    
+    public function addXP($user_id, $amount) {
+        
+        $user = $this->get($user_id);
+        
+        $user->xp += $amount;
+        
+        
+        $leveled = $this->checkLevel($user);
+        if ($this->save($user)) {
+            return $leveled + 1;
+        } else {
+            return false;
+        }
+        
+    }
+    
+    //Dirty hard values in lieu of another table or something. No one's gonna hit lv11 anyway!
+    public function checkLevel($user) {
+        if($user->level == 1 && $user->xp > 104) {
+            $user->level += 1;
+            $user->next_level = 174;
+            $user->xp -= 104;
+            $this->Awards->addAward($user->id, 4);
+            return 1;
+        }
+        elseif($user->level == 2 && $user->xp > 174) {
+            $user->level += 1;
+            $user->next_level = 284;
+            $user->xp -= 174;
+            return 1;
+        }
+        elseif($user->level == 3 && $user->xp > 284) {
+            $user->level += 1;
+            $user->next_level = 436;
+            $user->xp -= 284;
+            return 1;
+        }
+        elseif($user->level == 4 && $user->xp > 436) {
+            $user->level += 1;
+            $user->next_level = 633;
+            $user->xp -= 436;
+            return 1;
+        }
+        elseif($user->level == 5 && $user->xp > 633) {
+            $user->level += 1;
+            $user->next_level = 878;
+            $user->xp -= 633;
+            return 1;
+        }
+        elseif($user->level == 6 && $user->xp > 878) {
+            $user->level += 1;
+            $user->next_level = 1174;
+            $user->xp -= 878;
+            return 1;
+        }
+        elseif($user->level == 7 && $user->xp > 1174) {
+            $user->level += 1;
+            $user->next_level = 1524;
+            $user->xp -= 1174;
+            return 1;
+        }
+        elseif($user->level == 8 && $user->xp > 1524) {
+            $user->level += 1;
+            $user->next_level = 1931;
+            $user->xp -= 1524;
+            return 1;
+        }
+        elseif($user->level == 9 && $user->xp > 1931) {
+            $user->level += 1;
+            $user->next_level = 5000;
+            $user->xp -= 1931;
+            return 1;
+        }
+        else {return 0;}
     }
 
 }

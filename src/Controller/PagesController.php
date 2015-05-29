@@ -23,6 +23,9 @@ class PagesController extends AppController {
     $this->loadModel('Hunts');
     $this->set('openhunts', $this->Hunts->findOpenHunts());
     $this->set('openvotes', $this->Hunts->findOpenVotes());
+    $this->set('pasthunts', $this->Hunts->findPastHunts(null, 5));
+    $this->set('totalopen', $this->Hunts->FindOpenHunts()->count());
+    $this->set('totalvote', $this->Hunts->findOpenVotes()->count());
     }
 
     public function what() {

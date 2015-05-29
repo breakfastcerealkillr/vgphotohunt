@@ -22,18 +22,6 @@ class HuntsController extends AppController {
      *
      * @return void
      */
-    public function index() {
-
-        
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Hunt id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
     public function view($id = null) {
 
         $userdata = $this->Auth->user();
@@ -48,13 +36,12 @@ class HuntsController extends AppController {
             
             $this->loadModel('Marks');
             $this->set('marks', $this->Marks->findByHunt($id, $this->user_id));
-            
         }
         else {
             
             $this->set('openhunts', $this->Hunts->findOpenHunts());
             $this->set('openvotes', $this->Hunts->findOpenVotes());
-            $this->set('pasthunts', $this->Hunts->findPastHunts());
+            $this->set('pasthunts', $this->Hunts->findPastHunts(null, 15));
             
         }
         
@@ -64,15 +51,25 @@ class HuntsController extends AppController {
         if ($this->Auth->user('roles') != "admin") {
             return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
         }
-        $hunt = $this->Hunts->newEntity();
 
         if ($this->request->is('post')) {
-            $hunt = $this->Hunts->patchEntity($hunt, $this->request->data);
+            $hunt = $this->Hunts->newEntity($this->request->data);
+            $i = 0;
+            foreach($this->request->data['marks'] as $mark) {
+                if ($mark['name'] != null) {
+                    $marks[$i] = $this->Hunts->Marks->newEntity();
+                    $marks[$i]->name = $mark['name'];
+                    $i += 1;
+                }
+            }
+
+             $hunt->marks = $marks;
+
             if ($this->Hunts->save($hunt)) {
                 $this->Flash->success('The hunt has been saved.');
                 return $this->redirect(['controller' => 'Admin' ,'action' => 'hunts']);
             } else {
-                $this->Flash->error('The hunt could not be saved. Please, try again.' . $hunt);
+                $this->Flash->error('The hunt could not be saved. Please, try again. <br />' . $hunt);
             }
         }
         

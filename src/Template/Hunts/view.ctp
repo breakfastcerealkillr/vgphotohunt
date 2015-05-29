@@ -1,62 +1,218 @@
+<?= $this->Html->script('fancy'); ?>
 <?php if(isset($hunt)):?>
-    <?php if($status === 'vote'):?>
-        <h1><?= $hunt->name ?> -- Open For Voting</h1>
-        <ul>
+    <?php if($status['vote'] == 'open'):?>
+    <?php $i = 1; ?>
+        <h2><?= $hunt->name ?> -- Open For Voting</h2>
+                <ul>
             <?php foreach($marks as $mark): ?>
-                <li><?= $mark->name ?><br />
-                    <?php foreach($mark['Pictures'] as $mpic): ?>
-                    <div style="float: left">
-                        <?= $this->Html->image('pictures/'. $mpic->guid . '_thumb.png'); ?> <br />
+                    <li><h3><?= $mark->name ?></h3> <br />
+                <?php foreach($mark['submissions'] as $mpic): ?>
+                    <div class="text-center" style="display: inline-block">
+                         <div class="thumb-container">
+                            <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
+                                <a href="../../pictures/<?= $mpic->guid ?>.png" class="fancybox" data-title-id="title-<?= $i ?>" rel="<?= $mark->name; ?>"><img src="../../img/blank.png" class="thumb-blank"></a>
+                                <div id="title-<?= $i ?>" class="hidden">
+                                    <a href="../../pictures/<?= $mpic->guid ?>.png" target="_blank"><p class="glyphicon glyphicon-search" style="float:right; margin-left: 5px; margin-bottom: 5px;"></p></a>
+                                        <div class="block-centered" style="margin: 0px auto;"><p class="text-big"><?= $mpic->caption ?></p></div>
+                                            <?php if(isset($mpic['picture_comments'])): ?>
+                                            <?php foreach($mpic['picture_comments'] as $comment): ?>
+                                                <div class="media">
+                                                  <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait ?>_small.png);">
+                                                    <?php if($comment->user->avatar != null): ?>
+                                                      <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                    <?php else: ?>
+                                                      <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                    <?php endif;?>
+                                                  </div>
+                                                  <div class="media-body">
+                                                      <p><?= $comment->comment?></p>
+                                                      <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
+                                                  </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                        <?php if($loggedin == true): ?>
+                                        <div class="col-md-4 col-centered" style="min-width: 300px;">
+                                            <?= $this->Form->create(null, ['url' => ['controller' => 'PictureComments', 'action' => 'add']]); ?>
+                                            <?= $this->Form->hidden('picture_id', ['value' => $mpic->id]) ?>
+                                            <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+                                            <?= $this->Form->input('comment') ?>
+                                            <?= $this->Form->button('Submit') ?>
+                                            <?= $this->Form->end() ?>
+                                        </div>
+                                        <?php endif; ?>
+                                </div>
+                                <?php $i += 1; ?>
+                            </div>
+                        </div>
+                        <br />
                         <?= $mpic->user->username ; ?>
+                        <?php if ($loggedin == true  && empty($mpic->voted)) : ?>
+                        <?= $this->Form->create('voteAdd', ['url' => ['controller' => 'Votes', 'action' => 'voteAdd']]) ?>
+                        <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+                        <?= $this->Form->hidden('picture_id', ['value' => $mpic->id]) ?>
+                        <?= $this->Form->hidden('mark_id', ['value' => $mark->id]) ?>
+                        <?= $this->Form->button('Vote') ?>
+                        <?= $this->Form->end() ?>
+                        <?php elseif($loggedin == true && !empty($mpic->voted)): ?>
+                        <?= $this->Form->create('voteAdd', ['url' => ['controller' => 'Votes', 'action' => 'voteAdd']]) ?>
+                        <?= $this->Form->button('Voted', ['class' => 'disabled']) ?>
+                        <?= $this->Form->end() ?>
+                        <?php endif; ?>
                     </div>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
                 </li>
             <?php endforeach; ?>
         </ul>
-    <?php elseif($status === 'open'): ?>
-        <h1><?= $hunt->name ?> -- Open For Submission</h1>
+    <?php elseif($status['subs'] == 'open'): ?>
+        <?php $i = 1; ?>
+        <h2><?= $hunt->name ?> -- Open For Submission</h2>
         <ul>
             <?php foreach($marks as $mark): ?>
-                 <li><?= $mark->name ?></li>
+                 <li><h3><?= $mark->name ?></h3></li>
+                 <?php if($mark->completed == true && $loggedin == true ) : ?>
+                        <?php foreach($mark['submissions'] as $mpic): ?>
+                 <div class="text-center" style="display: inline-block">
+                    <div class="thumb-container">
+                       <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
+                           <a href="../../pictures/<?= $mpic->guid ?>.png" class="fancybox" data-title-id="title-<?= $i ?>" rel="<?= $mark->name; ?>"><img src="../../img/blank.png" class="thumb-blank"></a>
+                           <div id="title-<?= $i ?>" class="hidden">
+                               <a href="../../pictures/<?= $mpic->guid ?>.png" target="_blank"><p class="glyphicon glyphicon-search" style="float:right; margin-left: 5px; margin-bottom: 5px;"></p></a>
+                                   <div class="block-centered" style="margin: 0px auto;"><p class="text-big"><?= $mpic->caption ?></p></div>
+                                       <?php if(isset($mpic['picture_comments'])): ?>
+                                       <?php foreach($mpic['picture_comments'] as $comment): ?>
+                                           <div class="media">
+                                             <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait ?>_small.png);">
+                                                <?php if($comment->user->avatar != null): ?>
+                                                <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                <?php else: ?>
+                                                <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                <?php endif;?>
+                                             </div>
+                                             <div class="media-body">
+                                                 <p><?= $comment->comment?></p>
+                                                 <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
+                                             </div>
+                                       </div>
+                                       <?php endforeach; ?>
+                                   <?php endif; ?>
+                                   <?php if($loggedin == true): ?>
+                                   <div class="col-md-4 col-centered" style="min-width: 300px;">
+                                       <?= $this->Form->create(null, ['url' => ['controller' => 'PictureComments', 'action' => 'add']]); ?>
+                                       <?= $this->Form->hidden('picture_id', ['value' => $mpic->id]) ?>
+                                       <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+                                       <?= $this->Form->input('comment') ?>
+                                       <?= $this->Form->button('Submit') ?>
+                                       <?= $this->Form->end() ?>
+                                   </div>
+                                   <?php endif; ?>
+                           </div>
+                           <?php $i += 1; ?>
+                       </div>
+                   </div>
+                <br />
+                    <?= $mpic->user->username ; ?>
+                </div>
+                        <?php endforeach; ?>
+                 <?php elseif($loggedin == true) : ?>
+                        <?= $this->Form->create('addSub', ['type' => 'file', 'url' => ['controller' => 'Pictures', 'action' => 'addSub']]) ?>
+                        <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+                        <?= $this->Form->hidden('mark_id', ['value' => $mark->id]) ?>
+                        <?= $this->Form->hidden('guid') ?>
+                        <?= $this->Form->input('file', ['type' => 'file', 'label' => 'Upload Picture']); ?>
+                        <?= $this->Form->input('caption'); ?>
+                        <?= $this->Form->button('Submit'); ?>
+                        <?= $this->Form->end() ?>
+                 <p>Submit your own to see others already submitted!</p>
+                 <?php else : ?>
+                 <p>Please log in to submit your screenshots!</p>
+                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <h1><?= $hunt->name ?> -- Archived</h1>
+        <?php $i = 1; ?>
+        <h2><?= $hunt->name ?> -- Archived</h2>
         <ul>
             <?php foreach($marks as $mark): ?>
-                 <li><?= $mark->name ?></li>
+                <li><h3><?= $mark->name ?></h3> <br />
+                <?php foreach($mark['submissions'] as $mpic): ?>
+                    <div class="text-center" style="display: inline-block">
+                        <div class="thumb-container">
+                           <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
+                               <a href="../../pictures/<?= $mpic->guid ?>.png" class="fancybox" data-title-id="title-<?= $i ?>" rel="<?= $mark->name; ?>"><img src="../../img/blank.png" class="thumb-blank"></a>
+                               <div id="title-<?= $i ?>" class="hidden">
+                                   <a href="../../pictures/<?= $mpic->guid ?>.png" target="_blank"><p class="glyphicon glyphicon-search" style="float:right; margin-left: 5px; margin-bottom: 5px;"></p></a>
+                                       <div class="block-centered" style="margin: 0px auto;"><p class="text-big"><?= $mpic->caption ?></p></div>
+                                           <?php if(isset($mpic['picture_comments'])): ?>
+                                           <?php foreach($mpic['picture_comments'] as $comment): ?>
+                                               <div class="media">
+                                                 <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait ?>_small.png);">
+                                                    <?php if($comment->user->avatar != null): ?>
+                                                    <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                    <?php else: ?>
+                                                    <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
+                                                    <?php endif;?>
+                                                 </div>
+                                                 <div class="media-body">
+                                                     <p><?= $comment->comment?></p>
+                                                     <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
+                                                 </div>
+                                           </div>
+                                           <?php endforeach; ?>
+                                       <?php endif; ?>
+                                       <?php if($loggedin == true): ?>
+                                       <div class="col-md-4 col-centered" style="min-width: 300px;">
+                                           <?= $this->Form->create(null, ['url' => ['controller' => 'PictureComments', 'action' => 'add']]); ?>
+                                           <?= $this->Form->hidden('picture_id', ['value' => $mpic->id]) ?>
+                                           <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+                                           <?= $this->Form->input('comment') ?>
+                                           <?= $this->Form->button('Submit') ?>
+                                           <?= $this->Form->end() ?>
+                                       </div>
+                                       <?php endif; ?>
+                               </div>
+                               <?php $i += 1; ?>
+                           </div>
+                       </div>
+                    <br />
+                        <?= $mpic->user->username ; ?>
+                        <?php if ($mark->winner_id == $mpic->id) {echo ' - Winner!';} ?>
+                    </div>
+                <?php endforeach; ?>
+                </li>
             <?php endforeach; ?>
         </ul>
 <?php endif; ?>
         
-<?php // VIEW LISTS. WOULD ALSO BE GOOD INDEX.CTP CODE ?>
-        
-<?php else: ?>
+<?php else: // NO ID GIVEN. LIST MODE ?>
+<div class="row">
+    <div class="col-md-4">
+        <h2>OPEN HUNTS</h2>
     <?php foreach($openhunts as $ohunt): ?>
-        <?= $ohunt->game->name ?> - <?= $ohunt->name ?>
+        <span class="badge"><?= $this->Html->link($ohunt->game->short_name,['controller' => 'Games', 'action' => 'view', $ohunt->game->id]) ?></span> <?= $this->Html->link($ohunt->name,['controller' => 'Hunts', 'action' => 'view', $ohunt->id]) ?>
         <ul>
             <?php foreach($ohunt['marks'] as $omark): ?>
             <li><?= $omark->name ?></li>
             <?php endforeach; ?>
         </ul>
     <?php endforeach; ?>
-    <hr />
+    </div>
+    <div class="col-md-4">
+        <h2>OPEN FOR VOTES</h2>
     <?php foreach($openvotes as $ovote): ?>
-        <?= $ovote->game->name ?> - <?= $ovote->name ?>
+        <span class="badge"><?= $this->Html->link($ovote->game->short_name,['controller' => 'Games', 'action' => 'view', $ovote->game->id]) ?></span> <?= $this->Html->link($ovote->name,['controller' => 'Hunts', 'action' => 'view', $ovote->id]) ?>
         <ul>
             <?php foreach($ovote['marks'] as $ovmark): ?>
             <li><?= $ovmark->name ?></li>
             <?php endforeach; ?>
         </ul>
     <?php endforeach; ?>
-    <hr />
+    </div>
+    <div class="col-md-4">
+        <h2>PAST HUNTS</h2>
     <?php foreach($pasthunts as $pasthunt): ?>
-        <?= $pasthunt->game->name ?> - <?= $pasthunt->name ?>
-        <ul>
-            <?php foreach($pasthunt['marks'] as $pmark): ?>
-            <li><?= $pmark->name ?></li>
-            <?php endforeach; ?>
-        </ul>
+        <span class="badge"><?= $this->Html->link($pasthunt->game->short_name,['controller' => 'Games', 'action' => 'view', $pasthunt->game->id]) ?></span> <span class="text-med"><?= $this->Html->link($pasthunt->name,['controller' => 'Hunts', 'action' => 'view', $pasthunt->id]) ?></span><br />
     <?php endforeach; ?>
-
+    </div>
+</div>
 <?php endif; ?>

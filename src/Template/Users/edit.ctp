@@ -12,6 +12,8 @@
         <?= $this->Form->hidden('Users.avatar', ['default' => $user->avatar]) ?>
         <?= $this->Form->input('Users.file', ['type' => 'file', 'label' => 'Upload New Avatar']); ?>
         <?= $this->Form->input('Users.steam_id', ['type' => 'text', 'label' => 'Steam ID', 'default' => $user->steam_id]) ?>
+        <?= $this->Form->label('Users.current_portrait', 'Current Portrait'); ?>
+        <?= $this->Form->select('Users.current_portrait', $awards, ['empty' => ['portrait1' => 'Default'], 'default' => $user->current_portrait]) ?>
         <?= $this->Form->input('Users.timezone', ['options' => Cake\I18n\Time::listTimezones(), 'default' => $user->timezone]) ?>
         <?= $this->Form->button('Save', ['class' => 'btn btn-success']) ?>
         <?= $this->Html->link('Cancel', ['action' => 'view', $user->id], ['class' => 'btn btn-default']) ?>

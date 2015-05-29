@@ -77,15 +77,20 @@ class AppController extends Controller {
         $this->Auth->allow(['index', 'view', 'dashboard', 'register']);
 
         $userdata = $this->Auth->user();
-
         $this->user_id = $userdata['id'];
-
-        if (!empty($this->user_id)) {
-            $this->set('user_id', $this->user_id);
-            $this->set('username', $this->Auth->user('username'));
+        // Temporary way to break data away from auth cache and update. Running every page = bad, though....
+        $this->loadModel('Users');
+        
+        if (!empty($userdata)) {
+            $user = $this->Users->get($userdata['id']);
+            $this->set('user_id', $user->id);
+            $this->set('username', $user->username);
             $this->set('loggedin', true);
-            $this->set('timezone', $this->Auth->user('timezone'));
-            $this->set('avatar', $this->Auth->user('avatar'));
+            $this->set('timezone', $user->timezone);
+            $this->set('avatar', $user->avatar);
+            $this->set('current_portrait', $user->current_portrait);
+            $this->set('level', $user->level);
+            $this->set('current_user', $user);
         } else {
             $this->set('loggedin', false);
             $this->set('username', false);

@@ -1,10 +1,12 @@
-          <div class="w-col w-col-4 right-col">
+          <div class="col-md-4 right-col">
             <h1>LATEST WINNERS</h1>
-            <p>Hurry up and win something, will ya?</p>
             <div class="w-slider slider-winners" data-animation="slide" data-duration="500" data-infinite="1">
               <div class="w-slider-mask">
                   <?php foreach($winners as $winner): ?>
-                    <div class="w-slide"><img src="pictures/<?= $winner->picture->guid ?>.png" alt="By <?= $winner->picture->user->username ?>"></div>
+                    <div class="w-slide">
+                        <div class="w-slider-fill" style="background: url(pictures/<?= $winner->winner->guid ?>.png) no-repeat center center; background-size: cover;">
+                        </div>
+                    </div>
                   <?php endforeach; ?>
               </div>
               <div class="w-slider-arrow-left">
@@ -20,22 +22,43 @@
             </div>
             <div class="sidebar-list">
               <div class="sidebar-title">OPEN HUNTS</div>
-              <?php foreach($openhunts as $hunt): ?>
-              <?= $this->Html->link($hunt->game->name, ['controller' => 'games', 'action' => 'view', $hunt->game->id], ['class' => 'sidebar-game-text']) ;?> - 
-              <?= $this->Html->link($hunt->name, ['controller' => 'hunts', 'action' => 'view', $hunt->id], ['class' => 'sidebar-hunt-text']) ;?>
-              <?php endforeach; ?>
+              <ul class="list-group">
+            <?php foreach($openhunts as $hunt): ?>
+              <li class="list-group-item list-noborder">
+                  <span class="badge"><?= $this->Html->link($hunt->game->short_name, ['controller' => 'games', 'action' => 'view', $hunt->game->id], ['class' => 'sidebar-game-text']) ;?></span> - 
+                  <span class="sidebar-hunt-text"><?= $this->Html->link($hunt->name, ['controller' => 'hunts', 'action' => 'view', $hunt->id], ['class' => 'sidebar-hunt-text']) ;?></span></li>
+            <?php endforeach; ?>
+              </ul>
             </div>
             <div class="sidebar-list">
               <div class="sidebar-title">OPEN FOR VOTES</div>
-              <?php foreach($openvotes as $vote): ?>
-              <p><?= $this->Html->link($vote->game->name, ['controller' => 'games', 'action' => 'view', $vote->game->id], ['class' => 'sidebar-game-text']) ;?> - 
+              <ul class="list-group">
+            <?php foreach($openvotes as $vote): ?>
+              <li class="list-group-item list-noborder">
+              <span class="badge"><?= $this->Html->link($vote->game->short_name, ['controller' => 'games', 'action' => 'view', $vote->game->id], ['class' => 'sidebar-game-text']) ;?></span> - 
               <?= $this->Html->link($vote->name, ['controller' => 'hunts', 'action' => 'view', $vote->id], ['class' => 'sidebar-hunt-text']) ;?>
-              <?php endforeach; ?></p>
+              </li>
+            <?php endforeach; ?>
+              </ul>
+            </div>
+            <div class="sidebar-list">
+              <div class="sidebar-title">PAST HUNTS</div>
+              <ul class="list-group">
+            <?php foreach($pasthunts as $phunt): ?>
+              <li class="list-group-item list-noborder">
+              <span class="badge"><?= $this->Html->link($phunt->game->short_name, ['controller' => 'games', 'action' => 'view', $phunt->game->id], ['class' => 'sidebar-game-text']) ;?></span> - 
+              <?= $this->Html->link($phunt->name, ['controller' => 'hunts', 'action' => 'view', $phunt->id], ['class' => 'sidebar-hunt-text']) ;?>
+              </li>
+            <?php endforeach; ?>
+              </ul>
             </div>
             <div class="sidebar-list">
               <div class="sidebar-title">ARCHIVES</div>
-              <?= $this->Html->link('By Game',['controller' => 'archives', 'action' => 'ByGame']) ?><br />
-              <?= $this->Html->link('By Hunt',['controller' => 'archives', 'action' => 'ByHunt']) ?><br />
-              <?= $this->Html->link('By Mark',['controller' => 'archives', 'action' => 'ByMark']) ?><br />
-              <?= $this->Html->link('By Date',['controller' => 'archives', 'action' => 'ByDate']) ?>
+              <?= $this->Html->link('By Game','/archives/ByGame/') ?><br />
+              <?= $this->Html->link('By Hunt','/archives/ByHunt/') ?><br />
+              <?= $this->Html->link('By Mark','/archives/ByMark/') ?><br />
+              <?= $this->Html->link('By User','/archives/ByUser/') ?><br />
+              <?= $this->Html->link('By Date','/archives/ByDate/') ?>
             </div>
+          </div>
+        </div>

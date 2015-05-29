@@ -76,4 +76,34 @@ class VotesController extends AppController {
 
         return $this->redirect($this->referer());    
     }
+    
+    public function voteAdd () {
+        // Verify user_id isn't spoofed.
+        if ($this->request->data(['user_id']) != $this->user_id) {
+            $this->Flash->error('Failed!');
+        return $this->redirect($this->referer());
+        }
+        
+        $oldVote = $this->Votes->checkMark($this->request->data(['user_id']), $this->request->data(['mark_id']));
+        
+        if ($oldVote != null) {
+            $entity = $this->Votes->get($oldVote);
+            if ($this->Votes->delete($entity)) {
+                $this->Flash->success('Deleted old vote!');
+            } else {$this->Flash->error('Failed at deleting old vote!');}
+        }
+        
+        $vote = $this->Votes->newEntity();
+
+        if ($this->request->is('post')) {
+            $vote = $this->Votes->patchEntity($vote, $this->request->data);
+            if ($this->Votes->save($vote)) {
+                $this->Flash->success('The vote has been saved.');
+                return $this->redirect($this->referer());
+            } else {
+                $this->Flash->error('The vote could not be saved. Please, try again.');
+            }
+        }
+        
+    }
 }

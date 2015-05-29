@@ -54,4 +54,12 @@ class ArchivesController extends AppController {
         $this->paginate = ['limit' => 30];
         $this->set('pics', $this->paginate($query));
     }
+    
+    public function byUser($id = null) {
+        $this->loadModel('Pictures');
+        
+        $query = $this->Pictures->findByUser($id);
+        $this->paginate = ['limit' => 30];
+        $this->set('pics', $this->paginate($query));
+    }
 }

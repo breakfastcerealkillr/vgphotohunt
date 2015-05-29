@@ -17,6 +17,7 @@ class PictureCommentsController extends AppController {
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function add() {
+        if($this->user_id == $this->request->data['user_id']) {
         $pictureComment = $this->PictureComments->newEntity();
         if ($this->request->is('post')) {
             $pictureComment = $this->PictureComments->patchEntity($pictureComment, $this->request->data);
@@ -25,6 +26,7 @@ class PictureCommentsController extends AppController {
             } else {
                 $this->Flash->error('The picture comment could not be saved. Please, try again.');
             }
+        }
         }
 
         return $this->redirect($this->referer());

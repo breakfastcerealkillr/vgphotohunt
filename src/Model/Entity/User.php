@@ -39,6 +39,7 @@ class User extends Entity {
         'timezone' => true,
         'xp' => true,
         'level' => true,
+        'next_level' => true,
         'current_portrait' => true
     ];
 

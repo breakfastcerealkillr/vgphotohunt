@@ -920,12 +920,14 @@ textarea.w-select {
 }
 .w-slider {
   position: relative;
-  height: 300px;
   text-align: center;
   background: rgba(153, 153, 153, 0.5);
   clear: both;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.slider-winners {
+  height: 225px;
 }
 .w-slider-mask {
   position: relative;

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 col-centered">
         <h2>Login</h2>
         <?= $this->Flash->render('auth') ?>
         <?= $this->Form->create() ?>

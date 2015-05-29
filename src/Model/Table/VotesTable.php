@@ -23,33 +23,44 @@ class VotesTable extends Table
      * @return void
      */
     public function initialize(array $config)
-    {
-        $this->table('votes');
-        $this->displayField('id');
-        $this->primaryKey('id');
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->belongsTo('Pictures', [
-            'foreignKey' => 'picture_id'
-        ]);
-        $this->belongsTo('Marks', [
-            'foreignKey' => 'mark_id'
+        {
+            $this->table('votes');
+            $this->displayField('id');
+            $this->primaryKey('id');
+            $this->belongsTo('Users', [
+                'foreignKey' => 'user_id'
+            ]);
+            $this->belongsTo('Pictures', [
+                'foreignKey' => 'picture_id'
+            ]);
+            $this->belongsTo('Marks', [
+                'foreignKey' => 'mark_id'
+            ]);
+            
+            $this->addBehavior('CounterCache', [
+            'Pictures' => ['vote_count']
         ]);
 	}
-
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
+        
     public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+        {
+            $validator
+                ->add('id', 'valid', ['rule' => 'numeric'])
+                ->allowEmpty('id', 'create');
 
-        return $validator;
+            return $validator;
+        }
+    
+    //Checks to see if a user has voted on any picture in a mark.
+    public function checkMark($userId, $markId) {
+        $query = $this->find()
+            ->where(['user_id' => $userId, 'mark_id' => $markId])
+            ->first();
+        if ($query->id != null) {
+                $voteId = $query->id;
+                return $voteId;
+        }
+        else {return null;}
     }
+    
 }
