@@ -4,11 +4,11 @@
 <div class="row">
     <div class="col-md-3">
         <?php if (empty($user->avatar)): ?>
-        <div class="" style="background-size: cover; background-image: url(<?= $this->request->webroot ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
+        <div class="" style="background-size: cover; background-image: url(<?= $this->request->base ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
             <?= $this->Html->image('/avatars/default_100.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
         </div>
         <?php else: ?>
-        <div class="" style="background-size: cover; background-image: url(<?= $this->request->webroot ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
+        <div class="" style="background-size: cover; background-image: url(<?= $this->request->base ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
             <?= $this->Html->image('/avatars/'. $user->avatar .'.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
         </div>
         <?php endif ?>
