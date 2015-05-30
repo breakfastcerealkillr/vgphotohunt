@@ -49,7 +49,7 @@ class GamesTable extends Table
     public function beforeSave($event, $entity) {
 
         if (!empty($entity->file['name'])) {
-            if ($entity->pic_url !== '') {
+            if ($entity->pic_url != null) {
                 foreach (glob('gamepics/' . $entity->pic_url . '*') as $file) {
                     unlink($file);
                 }

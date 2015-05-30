@@ -93,7 +93,7 @@ class UsersTable extends Table {
     public function beforeSave($event, $entity) {
 
         if (!empty($entity->file['name'])) {
-            if ($entity->avatar !== '') {
+            if ($entity->avatar != null) {
                 foreach (glob('avatars/' . $entity->avatar . '*') as $file) {
                     unlink($file);
                 }
