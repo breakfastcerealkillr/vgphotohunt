@@ -3,6 +3,7 @@
     <?php if($status['vote'] == 'open'):?>
     <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Open For Voting</h2>
+        <p><?= $hunt->description ?></p>
                 <ul>
             <?php foreach($marks as $mark): ?>
                     <li><h3><?= $mark->name ?></h3> <br />
@@ -67,6 +68,7 @@
     <?php elseif($status['subs'] == 'open'): ?>
         <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Open For Submission</h2>
+        <p><?= $hunt->description ?></p>
         <ul>
             <?php foreach($marks as $mark): ?>
                  <li><h3><?= $mark->name ?></h3></li>
@@ -115,6 +117,9 @@
                 </div>
                         <?php endforeach; ?>
                  <?php elseif($loggedin == true) : ?>
+                 <div class="row">
+                 <div class="col-md-4">
+                        <p>Submit your own to see others already submitted!</p>
                         <?= $this->Form->create('addSub', ['type' => 'file', 'url' => ['controller' => 'Pictures', 'action' => 'addSub']]) ?>
                         <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
                         <?= $this->Form->hidden('mark_id', ['value' => $mark->id]) ?>
@@ -123,7 +128,8 @@
                         <?= $this->Form->input('caption'); ?>
                         <?= $this->Form->button('Submit'); ?>
                         <?= $this->Form->end() ?>
-                 <p>Submit your own to see others already submitted!</p>
+                 </div>
+                 </div>
                  <?php else : ?>
                  <p>Please log in to submit your screenshots!</p>
                  <?php endif; ?>
@@ -132,6 +138,7 @@
     <?php else: ?>
         <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Archived</h2>
+        <p><?= $hunt->description ?></p>
         <ul>
             <?php foreach($marks as $mark): ?>
                 <li><h3><?= $mark->name ?></h3> <br />
