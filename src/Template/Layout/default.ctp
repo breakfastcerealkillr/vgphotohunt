@@ -69,7 +69,7 @@ $cakeDescription = 'VG Photo Hunt';
                 <p style="font-size: 20pt;"><?= $this->Html->link($username,['controller' => 'Users', 'action' => 'view', $user_id], ['class' => 'header-text']); ?></p>
                 <p><?= $this->Html->link('Log Out',['controller' => 'Users', 'action' => 'logout'], ['class' => 'header-text']); ?></p>
             </div>
-            <div class="portrait-bg" style="background-image: url(<?= $this->request->webroot ?>/../portraits/<?= $current_user->current_portrait ?>.png);">
+            <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $current_user->current_portrait ?>.png);">
                 <?php if($current_user->avatar != null) : ?>
                 <?= $this->Html->image( $this->request->base . '/../avatars/'. $current_user->avatar .'.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
                 <?php else: ?>
