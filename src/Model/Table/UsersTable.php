@@ -49,6 +49,7 @@ class UsersTable extends Table {
                 ->add('id', 'valid', ['rule' => 'numeric'])
                 ->allowEmpty('id', 'create')
                 ->requirePresence('username', 'create')
+                ->requirePresence('email', 'create')
                 ->notEmpty('username')
                 ->allowEmpty('credentials_expire_at')
                 ->allowEmpty('steam_id')

@@ -38,6 +38,7 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->Html->script('modernizr') ?>
         <?= $this->Html->script('webflow') ?>
         
+        <?= $this->Html->meta('icon', 'img/favicon.png'); ?>
         <?= $this->fetch('css') ?>
         <?= $this->fetch('script') ?>
         <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>

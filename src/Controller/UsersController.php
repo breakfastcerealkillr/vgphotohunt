@@ -134,7 +134,7 @@ class UsersController extends AppController {
              * Cake 2 build. Hopefully this goes away in the future. -EH
              */
             if (!empty($this->request->data['password']) && !empty($this->request->data['password_confirm'])) {
-                $pass_validate = $this->Password->validate($this->request->data['password'], $this->request->data['password_confirm']);
+                $pass_validate = $this->Password->validate($this->request->data['password'], $this->request->data['password_confirm'], $this->request->data['email']);
             } else {
                 $this->Flash->error("Please Fill Out the Entire Form");
                 return;
@@ -152,6 +152,10 @@ class UsersController extends AppController {
                 $this->Flash->error('The user could not be saved. Please, try again.');
             }
         }
+    }
+    
+    public function registered() {
+        
     }
     
     public function adminAdd() {
