@@ -16,6 +16,7 @@
         <?= $this->Form->input('Users.username', ['type' => 'text', 'label' => 'User Name', 'default' => $user->username]) ?>
         <?= $this->Form->input('Users.password', ['label' => 'Password']) ?>
         <?= $this->Form->input('Users.email', ['type' => 'text', 'label' => 'Email', 'default' => $user->email]) ?>
+        <?= $this->Form->input('Users.roles', ['label' => 'roles', 'default' => $user->roles]) ?>
         <?= $this->Form->input('Users.xp', ['label' => 'XP', 'default' => $user->xp]) ?>
         <?= $this->Form->input('Users.level', ['label' => 'Level', 'default' => $user->level]) ?>
         <?= $this->Form->input('Users.next_level', ['type' => 'text', 'label' => 'XP to Next Level', 'default' => $user->next_level]) ?>
