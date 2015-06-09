@@ -10,7 +10,7 @@
 <p><?= $article->body;?></p>
 <p style="margin-top: 4%">
 <?= $article->user->username;?>, <?= $this->Time->format($article->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?><br />
-2 Comments || Full article</p>
+<?= $this->Html->link('Full Article', ['controller' => 'News', 'action' => 'view', $article->id]) ?></p>
 <div class="clearfix"></div>
 </div>
 <?php endforeach; ?>
