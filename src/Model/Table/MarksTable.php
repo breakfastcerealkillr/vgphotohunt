@@ -175,7 +175,7 @@ class MarksTable extends Table
     }
     
     public function markResolver($marks) {
-            $echo = ' ';
+            $out = ' ';
             foreach($marks as $mark) {
             
             if (empty($mark->submissions)) { // If there are no submissions...
@@ -183,29 +183,29 @@ class MarksTable extends Table
                 $mark->winner_id = 0; // Set the winner to something not null....
                 
                 if($this->save($mark)) {
-                     $echo .= 'Mark ID ' . $mark->id . ' has no submissions. <br />';}
-                else { $echo .= 'Mark ID ' . $mark->id . ' did not save! (No submissions) <br />';}
+                     $out .= 'Mark ID ' . $mark->id . ' has no submissions. <br />';}
+                else { $out .= 'Mark ID ' . $mark->id . ' did not save! (No submissions) <br />';}
             }
             else {
                 $topPic = $this->Pictures->rankVotes($mark->id, 1)->first(); //Find the top 1 picture per mark, by vote count
                 $mark->winner_id = $topPic->id;
                 if($this->save($mark)) {
-                    $echo .= 'Mark ID ' . $mark->id . ' saved with winner ID ' . $mark->winner_id . '. <br />';
+                    $out .= 'Mark ID ' . $mark->id . ' saved with winner ID ' . $mark->winner_id . '. <br />';
                 }
                 else {
-                    $echo .= 'Mark ID ' . $mark->id . ' did not save! (' . $mark->winner_id . ') <br />';
+                    $out .= 'Mark ID ' . $mark->id . ' did not save! (' . $mark->winner_id . ') <br />';
                 }
                 // Now give the winners XP, levels, awards, all that jazz.
                 if($this->Pictures->Users->addXp($topPic->user_id, 20) > 0) {
-                    $echo .= $topPic->user->username . ' got XP. <br />';
+                    $out .= $topPic->user->username . ' got XP. <br />';
                 }
                 else {
-                    $echo .= $topPic->user->username . ' failed to get XP. <br />';
+                    $out .= $topPic->user->username . ' failed to get XP. <br />';
                 }
             }
         }
         
-        return $echo;
+        return $out;
     }
     
     public function findWins($userid) {

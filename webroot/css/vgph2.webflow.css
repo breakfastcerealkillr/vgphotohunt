@@ -669,7 +669,9 @@ a.sidebar-game-text:hover {
   margin-left:auto;
   margin-right:auto;
 }
+@media screen and (device-width: 360px) {
 
+}
 @font-face {
   font-family: 'Upheaval';
   src: url('../fonts/upheavtt-webfont.ttf') format('truetype');

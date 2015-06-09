@@ -91,10 +91,10 @@ class MarksController extends AppController {
     public function resolveMarks() {
         
         $marks = $this->Marks->findUnresolved()->all();
-        $echo = $this->Marks->markResolver($marks);
+        $out = $this->Marks->markResolver($marks);
         
         
-        $this->set('echo', $echo);
+        $this->set('out', $out);
         
     }
     

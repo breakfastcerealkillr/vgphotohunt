@@ -1,2 +1,2 @@
 <?= $this->element('adminNav') ?>
-<p><?= $echo ?></p>
+<p><?= $out ?></p>
