@@ -186,7 +186,7 @@ class UsersController extends AppController {
                 $this->Flash->success('Saved!');
                 return $this->redirect(['action' => 'adminEdit', $id]);
             } else {
-                $this->Flash->error('The user could not be saved. Please, try again.');
+                $this->Flash->error('The user could not be saved.');
             }
         }
         $this->set('user', $user);

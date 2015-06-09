@@ -8,6 +8,9 @@
                     <li>There are <b><?= $this->Html->link($totalopen, ['controller' => 'hunts', 'action' => 'view'], ['class' => ''])?></b> open hunts you can submit to.</li>
                     <li>There are <b><?= $this->Html->link($totalvote, ['controller' => 'hunts', 'action' => 'view'], ['class' => ''])?></b> hunts you can vote on.</li>
                     <li>You can <?= $this->Html->link('check your stats', ['controller' => 'users', 'action' => 'view', $user_id], ['class' => ''])?> on your profile page.</li>
+                    <?php if($current_user->avatar == null) : ?>
+                    <li><?= $this->Html->link('Change your avatar', ['controller' => 'users', 'action' => 'view', $user_id], ['class' => ''])?> to something awesome!</li>
+                    <?php endif; ?>
                     <li>Get in game and take some screenshots, you lazy oaf!</li>
                 </ul>
                 <?php else: ?>

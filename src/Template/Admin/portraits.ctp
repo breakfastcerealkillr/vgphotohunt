@@ -16,7 +16,7 @@
                     <td><?= $this->Html->link($portrait->id, ['controller' => 'portraits', 'action' => 'editAdmin', $portrait->id]) ?></td>
                     <td><?= $portrait->name ?></td>
                     <td><?= $portrait->description ?></td>
-                    <td><?= $this->Html->image('/portraits/' . $portrait->pic_url . '_100.png') ?></td>
+                    <td><?= $this->Html->image('/portraits/' . $portrait->pic_url . '_small.png') ?></td>
                     <td><?= $this->Html->link('Edit', ['controller' => 'Portraits', 'action' => 'adminEdit', $portrait->id], ['class' => 'btn btn-xs btn-warning']) ?></td>
                     <td><?= $this->Html->link('Delete', ['controller' => 'Portraits', 'action' => 'adminDelete', $portrait->id], ['class' => 'btn btn-xs btn-danger', 'confirm' => 'Are you really sure?!']); ?></td>
                 </tr>

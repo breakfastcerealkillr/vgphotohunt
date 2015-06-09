@@ -83,11 +83,11 @@ class UsersTable extends Table {
         return $query;
     }
 
-     public function beforeMarshal(Event $event, ArrayObject $data) {
+     public function beforeMarshal(Event $event, \ArrayObject $data) {
         if (isset($data['password'])) {
             if (empty($data['password'])) {
                 unset($data['password']);
-            } 
+            }
         }
      }
      
@@ -185,31 +185,35 @@ class UsersTable extends Table {
             $user->level += 1;
             $user->next_level = 174;
             $user->xp -= 104;
-            $this->Awards->addAward($user->id, 4);
+            $this->Awards->addAward($user->id, 5);
             return 1;
         }
         elseif($user->level == 2 && $user->xp > 174) {
             $user->level += 1;
             $user->next_level = 284;
             $user->xp -= 174;
+            $this->Awards->addAward($user->id, 6);
             return 1;
         }
         elseif($user->level == 3 && $user->xp > 284) {
             $user->level += 1;
             $user->next_level = 436;
             $user->xp -= 284;
+            $this->Awards->addAward($user->id, 7);
             return 1;
         }
         elseif($user->level == 4 && $user->xp > 436) {
             $user->level += 1;
             $user->next_level = 633;
             $user->xp -= 436;
+            $this->Awards->addAward($user->id, 8);
             return 1;
         }
         elseif($user->level == 5 && $user->xp > 633) {
             $user->level += 1;
             $user->next_level = 878;
             $user->xp -= 633;
+            $this->Awards->addAward($user->id, 5);
             return 1;
         }
         elseif($user->level == 6 && $user->xp > 878) {
