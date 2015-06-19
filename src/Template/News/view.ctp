@@ -24,21 +24,7 @@
     <div class="col-md-6 col-md-offset-3">
     <?php if(isset($article['news_comments'])): ?>
         <?php foreach($article['news_comments'] as $comment): ?>
-            <div class="media">
-              <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait?>_small.png);">
-                <?php if($comment->user->avatar != null): ?>
-                  <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                <?php else: ?>
-                  <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                <?php endif;?>
-                
-                  
-              </div>
-              <div class="media-body">
-                  <p><?= $comment->comment?></p>
-                  <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
-              </div>
-        </div>
+            <?= $this->element('comments', ['comment' => $comment]) ; ?>
         <?php endforeach; ?>
     <?php endif; ?>
     <?php if($loggedin == true): ?>

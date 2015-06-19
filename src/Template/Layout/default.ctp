@@ -72,9 +72,13 @@ $cakeDescription = 'VG Photo Hunt';
             </div>
             <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $current_user->current_portrait ?>.png);">
                 <?php if($current_user->avatar != null) : ?>
-                <?= $this->Html->image( $this->request->base . '/../avatars/'. $current_user->avatar .'.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $current_user->avatar .'.png'; ?>)">
+                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                </div>
                 <?php else: ?>
-                <?= $this->Html->image( $this->request->base . '/../avatars/default.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/default.png'; ?>)">
+                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                </div>
                 <?php endif; ?>
             </div>
         </div>

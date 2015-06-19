@@ -3,15 +3,15 @@
 <h2 class="text-center"><?= $user->username ?></h2>
 <div class="row">
     <div class="col-md-3">
-        <?php if (empty($user->avatar)): ?>
-        <div class="" style="background-size: cover; background-image: url(<?= $this->request->base ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
-            <?= $this->Html->image('/avatars/default_100.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
-        </div>
-        <?php else: ?>
-        <div class="" style="background-size: cover; background-image: url(<?= $this->request->base ?>/../portraits/<?= $user->current_portrait ?>.png); width: 153px; height: 183px; margin: 0px auto;">
-            <?= $this->Html->image('/avatars/'. $user->avatar .'.png', ['style' => 'width: 133px; height: 133px; margin-top: 9px; margin-left: 10px;'])?>
-        </div>
-        <?php endif ?>
+                <?php if(!empty($user->avatar)) : ?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $user->avatar .'.png'; ?>)">
+                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                </div>
+                <?php else: ?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/default.png'; ?>)">
+                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                </div>
+                <?php endif; ?>
         <div class="progress media-spacer">
             <div class="progress-bar" role="progressbar" aria-valuenow="<?= $user->xp ?>" aria-valuemin="0" aria-valuemax="<?= $user->next_level ?>" style="width: <?= (($user->xp + 1) / $user->next_level) * 100; ?>%;">
                 <span class="progress-text">Lv&nbsp;<span class="bolded"><?= $user->level; ?></span></span>
@@ -36,7 +36,11 @@
                 <td>Comments</td><td><?= $totalcomments ?></td>
             </tr>
             <tr>
-                <td>Steam ID:</td><td><?= $user->steam_id ?></td>
+                <?php if(!empty($user->steam_id)) : ?>
+                <td>Steam ID:</td><td><a href="http://steamcommunity.com/profiles/<?= $user->steam_id ?>/">Steam Profile</a></td>
+                <?php else : ?>
+                <td>Steam ID:</td><td>None Listed</td>
+                <?php endif; ?>
             </tr>
         </table>
     </div>
@@ -54,19 +58,7 @@
                                <div class="block-centered" style="margin: 0px auto;"><p class="text-big"><?= $mpic->caption ?></p></div>
                                    <?php if(isset($mpic['picture_comments'])): ?>
                                    <?php foreach($mpic['picture_comments'] as $comment): ?>
-                                       <div class="media">
-                                         <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait ?>_small.png);">
-                                            <?php if($comment->user->avatar != null): ?>
-                                            <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                                            <?php else: ?>
-                                            <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                                            <?php endif;?>
-                                         </div>
-                                         <div class="media-body">
-                                             <p><?= $comment->comment?></p>
-                                             <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
-                                         </div>
-                                   </div>
+                                        <?= $this->element('comments', ['comment' => $comment]) ; ?>
                                    <?php endforeach; ?>
                                <?php endif; ?>
                                <?php if($loggedin == true): ?>

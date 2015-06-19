@@ -1386,45 +1386,7 @@ textarea.w-select {
 .w-lightbox-noscroll {
   overflow: hidden;
 }
-@media (min-width: 768px) {
-  .w-lightbox-content {
-    height: 96vh;
-    margin-top: 2vh;
-  }
-  .w-lightbox-view,
-  .w-lightbox-view:before {
-    height: 96vh;
-  }
-  /* .w-lightbox-content */
-  .w-lightbox-group,
-  .w-lightbox-group .w-lightbox-view,
-  .w-lightbox-group .w-lightbox-view:before {
-    height: 84vh;
-  }
-  .w-lightbox-image {
-    max-width: 96vw;
-    max-height: 96vh;
-  }
-  .w-lightbox-group .w-lightbox-image {
-    max-width: 82.3vw;
-    max-height: 84vh;
-  }
-  .w-lightbox-left,
-  .w-lightbox-right {
-    display: block;
-    opacity: .5;
-  }
-  .w-lightbox-close {
-    opacity: .8;
-  }
-  .w-lightbox-control:hover {
-    opacity: 1;
-  }
-}
-.w-lightbox-inactive,
-.w-lightbox-inactive:hover {
-  opacity: 0;
-}
+
 .w-nav {
   position: relative;
   background: #BBB;
@@ -1539,23 +1501,7 @@ textarea.w-select {
 .w-nav[data-collapse="all"] .w-nav-button {
   display: block;
 }
-@media screen and (max-width: 991px) {
-  .w-nav[data-collapse="medium"] .w-nav-menu {
-    display: none;
-  }
-  .w-nav[data-collapse="medium"] .w-nav-button {
-    display: block;
-  }
-}
 
-@media screen and (max-width: 479px) {
-  .w-nav[data-collapse="tiny"] .w-nav-menu {
-    display: none;
-  }
-  .w-nav[data-collapse="tiny"] .w-nav-button {
-    display: block;
-  }
-}
 .w-tabs {
   position: relative;
 }
@@ -1595,11 +1541,7 @@ textarea.w-select {
 .w--tab-active {
   display: block;
 }
-@media screen and (max-width: 479px) {
-  .w-tab-link {
-    display: block;
-  }
-}
+
 .w-ix-emptyfix:after {
   content: "";
 }

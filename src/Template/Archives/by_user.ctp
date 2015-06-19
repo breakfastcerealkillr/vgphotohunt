@@ -5,7 +5,7 @@
         <?php $currentUser = ''; ?>
         <?php foreach ($pics as $mpic): ?>
         <?php if ($currentUser != $mpic->user->username): ?>
-            <h2><?= $mpic->user->username; ?></h2>
+            <h2><?= $this->Html->link($mpic->user->username, ['controller' => 'Users', 'action' => 'view', $mpic->user->id]); ?></h2>
         <?php $currentUser = $mpic->user->username; ?>
         <?php endif; ?>
             <div class="text-center" style="display: inline-block">
@@ -17,19 +17,7 @@
                                <div class="block-centered" style="margin: 0px auto;"><p class="text-big"><?= $mpic->caption ?></p></div>
                                    <?php if(isset($mpic['picture_comments'])): ?>
                                    <?php foreach($mpic['picture_comments'] as $comment): ?>
-                                       <div class="media">
-                                         <div class="media-left mini-profile-bg" style="background-image: url(../../portraits/<?= $comment->user->current_portrait ?>_small.png);">
-                                            <?php if($comment->user->avatar != null): ?>
-                                            <?php echo $this->Html->image('../avatars/' . $comment->user->avatar . '_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                                            <?php else: ?>
-                                            <?php echo $this->Html->image('../avatars/default_60.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'class' => 'media-object mini-profile', 'title' => $comment->user->username ]); ?>
-                                            <?php endif;?>
-                                         </div>
-                                         <div class="media-body">
-                                             <p><?= $comment->comment?></p>
-                                             <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
-                                         </div>
-                                   </div>
+                                    <?= $this->element('comments', ['comment' => $comment]) ; ?>
                                    <?php endforeach; ?>
                                <?php endif; ?>
                                <?php if($loggedin == true): ?>
