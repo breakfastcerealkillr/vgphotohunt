@@ -5,11 +5,11 @@
     <div class="col-md-3">
                 <?php if(!empty($user->avatar)) : ?>
                 <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $user->avatar .'.png'; ?>)">
-                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php else: ?>
                 <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/default.png'; ?>)">
-                    <?= $this->Html->image($this->request->webroot . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php endif; ?>
         <div class="progress media-spacer">
