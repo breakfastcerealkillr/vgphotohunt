@@ -11,6 +11,7 @@
                     <?php if($current_user->avatar == null) : ?>
                     <li><?= $this->Html->link('Change your avatar', ['controller' => 'users', 'action' => 'view', $user_id], ['class' => ''])?> to something awesome!</li>
                     <?php endif; ?>
+                    <li>Give us some <?= $this->Html->link('feedback', ['controller' => 'suggestions', 'action' => 'add'])?>!</li>
                     <li>Get in game and take some screenshots, you lazy oaf!</li>
                 </ul>
                 <?php else: ?>

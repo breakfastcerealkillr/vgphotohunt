@@ -4,9 +4,9 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Portrait Entity.
+ * Suggestion Entity.
  */
-class Portrait extends Entity
+class Suggestion extends Entity
 {
 
     /**
@@ -15,8 +15,8 @@ class Portrait extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-		'description' => true,
-		'url' => true
+        'type' => true,
+        'description' => true,
+        'user_id' => true
     ];
 }

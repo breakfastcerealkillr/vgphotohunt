@@ -16,4 +16,7 @@
         <?= $this->Html->link('Portraits', ['controller' => 'Admin', 'action' => 'portraits'], ['class' => 'btn btn-default']) ?>
         <?= $this->Html->link('Awards', ['controller' => 'Admin', 'action' => 'awards'], ['class' => 'btn btn-default']) ?>
     </div>
+    <div class="btn-group" role="group">
+        <?= $this->Html->link('Suggestions', ['controller' => 'Admin', 'action' => 'suggestions'], ['class' => 'btn btn-default']) ?>
+    </div>
 </div>

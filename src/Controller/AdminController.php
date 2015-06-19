@@ -174,4 +174,13 @@ class AdminController extends AppController {
 
         $this->set('votes', $this->paginate('Votes'));
     }
+    
+        public function suggestions() {
+
+        $this->paginate = [
+            'order' => ['Suggestions.id' => 'DESC']
+        ];
+
+        $this->set('suggestions', $this->paginate('Suggestions'));
+    }
 }
