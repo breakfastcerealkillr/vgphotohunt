@@ -3,14 +3,14 @@
 <h2 class="text-center"><?= $user->username ?></h2>
 <div class="row">
     <div class="col-md-3 text-center">
-            <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $current_user->current_portrait ?>.png);">
-                <?php if($current_user->avatar != null) : ?>
-                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $current_user->avatar .'.png'; ?>)">
-                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+            <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $user->current_portrait ?>.png);">
+                <?php if($user->avatar != null) : ?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $user->avatar .'.png'; ?>)">
+                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user->id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php else: ?>
                 <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/default.png'; ?>)">
-                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user->id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php endif; ?>
             </div>
