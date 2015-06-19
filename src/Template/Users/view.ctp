@@ -2,9 +2,10 @@
 <?php $i = 1; ?>
 <h2 class="text-center"><?= $user->username ?></h2>
 <div class="row">
-    <div class="col-md-3">
-                <?php if(!empty($user->avatar)) : ?>
-                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $user->avatar .'.png'; ?>)">
+    <div class="col-md-3 text-center">
+            <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $current_user->current_portrait ?>.png);">
+                <?php if($current_user->avatar != null) : ?>
+                <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/'. $current_user->avatar .'.png'; ?>)">
                     <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php else: ?>
@@ -12,6 +13,7 @@
                     <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
                 </div>
                 <?php endif; ?>
+            </div>
         <div class="progress media-spacer">
             <div class="progress-bar" role="progressbar" aria-valuenow="<?= $user->xp ?>" aria-valuemin="0" aria-valuemax="<?= $user->next_level ?>" style="width: <?= (($user->xp + 1) / $user->next_level) * 100; ?>%;">
                 <span class="progress-text">Lv&nbsp;<span class="bolded"><?= $user->level; ?></span></span>
