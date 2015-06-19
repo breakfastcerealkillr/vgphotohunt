@@ -25,6 +25,7 @@ $cakeDescription = 'VG Photo Hunt';
         </title>
         <?= $this->Html->meta('icon') ?>
         <?= $this->Html->css('bootstrap.css') ?>
+        <?= $this->Html->css('jquery-ui.css') ?>
         <?= $this->Html->css('normalize.css') ?>
         <?= $this->Html->css('jquery.fancybox.css') ?>
         <?= $this->Html->css('webflow.css') ?>

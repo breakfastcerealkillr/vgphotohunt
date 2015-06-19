@@ -69,6 +69,9 @@ p {
 .text-med {
     font-size: 15px;
 }
+h3:focus{
+    outline: 0;
+}
 .button {
   display: inline-block;
   padding: 18px 21px;

@@ -1,5 +1,5 @@
 <?= $this->Html->script('fancy'); ?>
-<?= $this->Html->script('count'); ?>
+<?= $this->Html->script('collapse'); ?>
 <?php if(isset($hunt)):?>
     <?php if($status['vote'] == 'open'):?>
     <?php $i = 1; ?>
@@ -14,10 +14,11 @@
             );
           });
         </script>
-                <ul>
+
             <?php foreach($marks as $mark): ?>
-                    <li><h3><?= $mark->name ?></h3> <br />
-                <?php foreach($mark['submissions'] as $mpic): ?>
+            <div class="collapse2">
+                <h3><?= $mark->name ?></h3>
+                <div><?php foreach($mark['submissions'] as $mpic): ?>
                     <div class="text-center" style="display: inline-block">
                          <div class="thumb-container">
                             <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
@@ -60,9 +61,10 @@
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
-                </li>
+                </div>
+            </div>
             <?php endforeach; ?>
-        </ul>
+
     <?php elseif($status['subs'] == 'open'): ?>
         <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Open For Submission</h2>
@@ -76,11 +78,12 @@
             );
           });
         </script>
-        <ul>
             <?php foreach($marks as $mark): ?>
-                 <li><h3><?= $mark->name ?></h3></li>
+            <div class="collapse2">
+                 <h3><?= $mark->name ?></h3>
                  <?php if($mark->completed == true && $loggedin == true ) : ?>
-                        <?php foreach($mark['submissions'] as $mpic): ?>
+                 <div>
+                 <?php foreach($mark['submissions'] as $mpic): ?>
                  <div class="text-center" style="display: inline-block">
                     <div class="thumb-container">
                        <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
@@ -110,8 +113,9 @@
                 <br />
                     <?= $mpic->user->username ; ?>
                 </div>
-                        <?php endforeach; ?>
-                 <?php elseif($loggedin == true) : ?>
+                <?php endforeach; ?>
+                </div>
+                <?php elseif($loggedin == true) : ?>
                  <div class="row">
                  <div class="col-md-4">
                         <p>Submit your own to see others already submitted!</p>
@@ -128,16 +132,18 @@
                  <?php else : ?>
                  <p>Please log in to submit your screenshots!</p>
                  <?php endif; ?>
+                 </div>
             <?php endforeach; ?>
-        </ul>
+            
     <?php else: ?>
         <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Archived</h2>
         <p><?= $hunt->description ?></p>
-        <ul>
+        
             <?php foreach($marks as $mark): ?>
-                <li><h3><?= $mark->name ?></h3> <br />
-                <?php foreach($mark['submissions'] as $mpic): ?>
+            <div class="collapse2">
+                <h3><?= $mark->name ?></h3>
+                <div><?php foreach($mark['submissions'] as $mpic): ?>
                     <div class="text-center" style="display: inline-block">
                         <div class="thumb-container">
                            <div class="thumb-pic" style="background-image: url('../../pictures/<?= $mpic->guid ?>_thumb.png');">
@@ -169,9 +175,11 @@
                         <?php if ($mark->winner_id == $mpic->id) {echo ' - Winner!';} ?>
                     </div>
                 <?php endforeach; ?>
-                </li>
+                </div>
+            </div>
             <?php endforeach; ?>
-        </ul>
+        
+
 <?php endif; ?>
         
 <?php else: // NO ID GIVEN. LIST MODE ?>
