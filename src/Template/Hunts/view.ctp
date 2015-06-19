@@ -1,9 +1,19 @@
 <?= $this->Html->script('fancy'); ?>
+<?= $this->Html->script('count'); ?>
 <?php if(isset($hunt)):?>
     <?php if($status['vote'] == 'open'):?>
     <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Open For Voting</h2>
         <p><?= $hunt->description ?></p>
+        <div id="timer"></div>
+        <script type="text/javascript">
+          $("#timer")
+          .countdown("<?= $this->Time->format($hunt->voting_end_date, 'Y/MM/d HH:mm:ss', 'Start Date Not Set', $timezone) ?>", function(event) {
+            $(this).text(
+              event.strftime('%-D day%!D, %-H hour%!H, %-M minute%!M and %-S second%!S remain.')
+            );
+          });
+        </script>
                 <ul>
             <?php foreach($marks as $mark): ?>
                     <li><h3><?= $mark->name ?></h3> <br />
@@ -57,6 +67,15 @@
         <?php $i = 1; ?>
         <h2><?= $hunt->name ?> -- Open For Submission</h2>
         <p><?= $hunt->description ?></p>
+        <div id="timer"></div>
+        <script type="text/javascript">
+          $("#timer")
+          .countdown("<?= $this->Time->format($hunt->end_date, 'Y/MM/d HH:mm:ss', 'Start Date Not Set', $timezone) ?>", function(event) {
+            $(this).text(
+              event.strftime('%-D day%!D, %-H hour%!H, %-M minute%!M and %-S second%!S remain.')
+            );
+          });
+        </script>
         <ul>
             <?php foreach($marks as $mark): ?>
                  <li><h3><?= $mark->name ?></h3></li>

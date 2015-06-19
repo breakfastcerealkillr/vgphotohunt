@@ -33,6 +33,7 @@ $cakeDescription = 'VG Photo Hunt';
         <?= $this->Html->script('jquery') ?>
         <?= $this->Html->script('jquery-ui') ?>
         <?= $this->Html->script('jquery.fancybox') ?>
+        <?= $this->Html->script('jquery.countdown.min') ?>
         <?= $this->Html->script('jflash') ?>
         <?= $this->Html->script('bootstrap') ?>
         <?= $this->Html->script('modernizr') ?>

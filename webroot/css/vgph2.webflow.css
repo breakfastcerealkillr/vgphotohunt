@@ -364,6 +364,10 @@ h2.news-view-title {
   float: none;
   text-align: center;
 }
+#timer {
+  font-size: 11pt;
+  color: #888;
+}
 .thumb-container {
     display: inline-block;
     background: url('../img/thumb_border.png') no-repeat;
