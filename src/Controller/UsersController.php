@@ -240,7 +240,7 @@ class UsersController extends AppController {
             $this->redirect('/');
         }
 
-        if ($this->setVerify($token)) {
+        if ($this->Users->verify($token)) {
             $this->Flash->success('Account Verified! You may do fancy things now.');
         } else {
             $this->Flash->error('Error!');

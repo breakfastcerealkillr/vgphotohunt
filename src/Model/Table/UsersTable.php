@@ -239,14 +239,14 @@ class UsersTable extends Table {
         }
     }
 
-    public function setVerify($token) {
+    public function verify($token) {
 
         if (!isset($token)) {
             return false;
         }
 
         $user = $this->find()
-                ->where(['Users.token' => $token])
+                ->where(['Users.confirmation_token' => $token])
                 ->first();
 
         $user->verified = true;
