@@ -42,11 +42,15 @@ class EmailsTable extends Table {
         $user = $this->getUser($userId);
 
         $email = new Email();
-        $email->from(['gm@vgphotohunt.com' => 'Game Master'])
+        $email->transport('default')
+                ->from(['gm@vgphotohunt.com' => 'Game Master'])
                 ->to($user->email)
                 ->subject('Please Confirm Your Account')
                 ->template('welcome')
-                ->viewVars(['token' => $user->confirmation_token])
+                ->viewVars([
+                    'token' => $user->confirmation_token,
+                    'username' => $user->username
+                ])
                 ->send();
     }
 

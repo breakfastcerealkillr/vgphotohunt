@@ -248,21 +248,6 @@ class UsersController extends AppController {
 
         return $this->redirect($this->referrer());
     }
-    
-    public function isVerified($id) {
-        
-        if (!isset($id)) {
-            return false;
-        }
-        
-        $user = $this->get($id);
-        
-        if (!$user->verfied) {
-            return false;
-        }
-        
-        return true;
-    }
 
     public function forgotPass() {
         //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp

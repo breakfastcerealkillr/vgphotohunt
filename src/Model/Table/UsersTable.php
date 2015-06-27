@@ -92,7 +92,7 @@ class UsersTable extends Table {
     }
 
     public function beforeSave($event, $entity) {
-        
+
         if ($entity->isNew()) {
             $entity->confirmation_token = rand(100000000000000, 999999999999999);
         }
@@ -252,6 +252,21 @@ class UsersTable extends Table {
         $user->verified = true;
 
         if (!$this->save($user)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isVerified($id) {
+
+        if (!isset($id)) {
+            return false;
+        }
+
+        $user = $this->get($id);
+
+        if (!$user->verfied) {
             return false;
         }
 
