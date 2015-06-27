@@ -25,8 +25,8 @@ class EmailsTable extends Table {
             return "This method requires 1 argument";
         }
 
-        $this->loadModel('Users');
-        $query = $this->Users
+        $users = TableRegistry::get('Users');
+        $query = $users
                 ->find()->where(['Users.id' => $id])
                 ->first();
 
