@@ -266,7 +266,7 @@ class UsersTable extends Table {
 
         $user = $this->get($id);
 
-        if (!$user->verfied) {
+        if (!$user->verified) {
             return false;
         }
 

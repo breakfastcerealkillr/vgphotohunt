@@ -246,7 +246,7 @@ class UsersController extends AppController {
             $this->Flash->error('Error!');
         }
 
-        return $this->redirect($this->referrer());
+        return $this->redirect($this->referer());
     }
 
     public function forgotPass() {
