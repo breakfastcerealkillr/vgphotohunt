@@ -239,7 +239,7 @@ class UsersTable extends Table {
         }
     }
 
-    public function verify($token) {
+    public function setVerify($token) {
 
         if (!isset($token)) {
             return false;
