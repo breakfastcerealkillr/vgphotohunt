@@ -17,6 +17,6 @@ class Mark extends Entity
     protected $_accessible = [
         'name' => true,
         'hunt_id' => true,
-        'winner_user_id' => true
+        'winner_id' => true
     ];
 }

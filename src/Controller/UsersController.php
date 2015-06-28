@@ -32,37 +32,23 @@ class UsersController extends AppController {
     public function view($id = null) {
 
         $this->loadModel('Pictures');
-
-        $user = $this->Users->get($id, [
-            'contain' => ['Pictures']
-        ]);
+        $this->loadModel('Marks');
+        $this->loadModel('Votes');
+        $this->loadModel('PictureComments');
+        $this->loadModel('NewsComments');
+        
+        $user = $this->Users->get($id);
         $this->set('user', $user);
-        $this->set('_serialize', ['user']);
+        
+        $this->set('latest', $this->Pictures->findByUser($id));
 
-        $pictures_count = $this->Pictures->find()->where(['Pictures.user_id' => $id])->count();
-        $this->set('pictures_count', $pictures_count);
+        // Aggregates, yay!
+        $this->set('pictures_count', $this->Pictures->find()->where(['Pictures.user_id' => $id])->count());
+        $this->set('wins', $this->Marks->findWins($id)->count());
+        $this->set('totalvotes', $this->Votes->find()->where(['Votes.user_id' => $id])->count());
+        $this->set('totalcomments', $this->PictureComments->find()->where(['user_id' => $id])->count() + $this->NewsComments->find()->where(['user_id' => $id])->count());
+        $this->set('sumvotes', $this->Pictures->tallyVotes($id));
     }
-
-    /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
-     */
-//    public function add() {
-//        $user = $this->Users->newEntity();
-//        if ($this->request->is('post')) {
-//            $user = $this->Users->patchEntity($user, $this->request->data);
-//            if ($this->Users->save($user)) {
-//                $this->Flash->success('The user has been saved.');
-//                return $this->redirect(['action' => 'index']);
-//            } else {
-//                $this->Flash->error('The user could not be saved. Please, try again.');
-//            }
-//        }
-//        $steams = $this->Users->Steams->find('list', ['limit' => 200]);
-//        $this->set(compact('user', 'steams'));
-//        $this->set('_serialize', ['user']);
-//    }
 
     /**
      * Edit method
@@ -88,6 +74,7 @@ class UsersController extends AppController {
             }
         }
         $this->set('user', $user);
+        $this->set('awards', $this->Users->Awards->findPortraits($id));
     }
 
     /**
@@ -133,7 +120,7 @@ class UsersController extends AppController {
     }
 
     public function register() {
-
+        
         $this->loadComponent('Password');
 
         $user = $this->Users->newEntity();
@@ -147,7 +134,7 @@ class UsersController extends AppController {
              * Cake 2 build. Hopefully this goes away in the future. -EH
              */
             if (!empty($this->request->data['password']) && !empty($this->request->data['password_confirm'])) {
-                $pass_validate = $this->Password->validate($this->request->data['password'], $this->request->data['password_confirm']);
+                $pass_validate = $this->Password->validate($this->request->data['password'], $this->request->data['password_confirm'], $this->request->data['email']);
             } else {
                 $this->Flash->error("Please Fill Out the Entire Form");
                 return;
@@ -167,19 +154,48 @@ class UsersController extends AppController {
         }
     }
     
-    public function adminEdit($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
+    public function registered() {
+        
+    }
+    
+    public function adminAdd() {
+		
+		$this->adminOnly();
+		
+        $user = $this->Users->newEntity();
+
+        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('The user has been saved.');
+                return $this->redirect(['controller' => 'Admin' ,'action' => 'users']);
+            } else {
+                $this->Flash->error('The user could not be saved. Please, try again.');
+            }
         }
+    }
+    
+    public function adminEdit($id) {
 
+        $this->adminOnly();
 
+        $user = $this->Users->get($id);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Saved!');
+                return $this->redirect(['action' => 'adminEdit', $id]);
+            } else {
+                $this->Flash->error('The user could not be saved.');
+            }
+        }
+        $this->set('user', $user);
         
     }
     
     public function adminDelete($id = null) {
-        if ($this->Auth->user('roles') != "admin") {
-            return $this->redirect(['controller' => 'admin', 'action' => 'dashboard']);
-        }
+        
+		$this->adminOnly();
 
   
         $user = $this->Users->get($id);
@@ -187,7 +203,7 @@ class UsersController extends AppController {
         $user->enabled = 0;
 
         if ($this->Users->save($user)) {
-            $this->Flash->success('Deleted!');
+            $this->Flash->success('User is disabled!');
         } else {
             $this->Flash->success('Failed!');
         }
@@ -216,6 +232,7 @@ class UsersController extends AppController {
         return $this->redirect($this->referer());
     }
     
-
-
+    public function forgotPass() {
+    //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp
+    }
 }

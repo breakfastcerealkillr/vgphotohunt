@@ -1,68 +1,51 @@
-<div class="actions columns large-2 medium-3">
-    <h3><?= __('Actions') ?></h3>
-    <ul class="side-nav">
-        <li><?= $this->Html->link(__('Edit Game'), ['action' => 'edit', $game->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Game'), ['action' => 'delete', $game->id], ['confirm' => __('Are you sure you want to delete # {0}?', $game->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Games'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Game'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Sets'), ['controller' => 'Sets', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Set'), ['controller' => 'Sets', 'action' => 'add']) ?> </li>
-    </ul>
-</div>
-<div class="games view large-10 medium-9 columns">
-    <h2><?= h($game->name) ?></h2>
-    <div class="row">
-        <div class="large-5 columns strings">
-            <h6 class="subheader"><?= __('Name') ?></h6>
-            <p><?= h($game->name) ?></p>
-        </div>
-        <div class="large-2 columns numbers end">
-            <h6 class="subheader"><?= __('Id') ?></h6>
-            <p><?= $this->Number->format($game->id) ?></p>
-        </div>
+<?= $this->Html->script('fancy'); ?>
+<?php if (isset($list)): ?>
+<div class="row">
+    <h2 class="text-center">Game List</h2>
+    <div class="col-md-7 col-centered">
+    <?php foreach ($list as $item): ?>
+        <p class="text-big"><?=$this->Html->link($item->name, ['controller' => 'Games', 'action' => 'view', $item->id ])?></p>
+    <?php endforeach; ?>
     </div>
+
+        
 </div>
-<div class="related row">
-    <div class="column large-12">
-    <h4 class="subheader"><?= __('Related Sets') ?></h4>
-    <?php if (!empty($game->sets)): ?>
-    <table cellpadding="0" cellspacing="0">
-        <tr>
-            <th><?= __('Id') ?></th>
-            <th><?= __('Game Id') ?></th>
-            <th><?= __('Name') ?></th>
-            <th><?= __('Description') ?></th>
-            <th><?= __('Set Start Date') ?></th>
-            <th><?= __('Set End Date') ?></th>
-            <th><?= __('Voting Start Date') ?></th>
-            <th><?= __('Voting End Date') ?></th>
-            <th><?= __('Winner User Id') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
-        </tr>
-        <?php foreach ($game->sets as $sets): ?>
-        <tr>
-            <td><?= h($sets->id) ?></td>
-            <td><?= h($sets->game_id) ?></td>
-            <td><?= h($sets->name) ?></td>
-            <td><?= h($sets->description) ?></td>
-            <td><?= h($sets->set_start_date) ?></td>
-            <td><?= h($sets->set_end_date) ?></td>
-            <td><?= h($sets->voting_start_date) ?></td>
-            <td><?= h($sets->voting_end_date) ?></td>
-            <td><?= h($sets->winner_user_id) ?></td>
+    
+<?php else: ?>
+    <h2 class="text-center"><?= $game->name ?></h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Open Hunts</h1>
+                <?php foreach ($openhunts as $ohunt): ?>
+                    <p class="text-big"><?=$this->Html->link($ohunt->name, ['controller' => 'Hunts', 'action' => 'view', $ohunt->id ])?></p>
+                    <p><?= $ohunt->start_date ?> - <?= $ohunt->end_date ?></p>
+                <?php endforeach; ?>
+            </div>
+            <div class="col-md-4">
+                <h1>Open for Votes</h1>
+                <?php foreach ($openvotes as $vhunt): ?>
+                    <p class="text-big"><?=$this->Html->link($vhunt->name, ['controller' => 'Hunts', 'action' => 'view', $vhunt->id ])?></p>
+                    <p class="small-text"><?= $vhunt->voting_start_date ?> - <?= $vhunt->voting_end_date ?></p>
+                <?php endforeach; ?>
+            </div>
+            <div class="col-md-4">
+                <h1>Past Hunts</h1>
+                <?php foreach ($pasthunts as $phunt): ?>
+                    <p class="text-big"><?=$this->Html->link($phunt->name, ['controller' => 'Hunts', 'action' => 'view', $phunt->id ])?></p>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Pictures from the Game</h1>
+            <?php foreach ($pics as $pic): ?>
+                <div class="thumb-container">
+                    <div class="thumb-pic" style="background-image: url('../../pictures/<?= $pic->guid ?>_thumb.png');">
+                        <a href="../../pictures/<?= $pic->guid ?>.png" class="fancybox" rel="<?= $game->name; ?>"><img src="../../img/blank.png" class="thumb-blank"></a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            </div>
+        </div>
+<?php endif; ?>
 
-            <td class="actions">
-                <?= $this->Html->link(__('View'), ['controller' => 'Sets', 'action' => 'view', $sets->id]) ?>
-
-                <?= $this->Html->link(__('Edit'), ['controller' => 'Sets', 'action' => 'edit', $sets->id]) ?>
-
-                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Sets', 'action' => 'delete', $sets->id], ['confirm' => __('Are you sure you want to delete # {0}?', $sets->id)]) ?>
-
-            </td>
-        </tr>
-
-        <?php endforeach; ?>
-    </table>
-    <?php endif; ?>
-    </div>
-</div>

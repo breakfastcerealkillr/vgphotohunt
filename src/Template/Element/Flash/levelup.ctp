@@ -1,0 +1,1 @@
+<div id="faded" class="alert alert-warning"><?= h($message) ?></div>

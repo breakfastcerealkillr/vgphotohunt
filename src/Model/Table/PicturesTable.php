@@ -74,25 +74,26 @@ class PicturesTable extends Table {
     }
 
     public function beforeSave($event, $entity) {
+        if (is_null($entity->id)) {
+            if (empty($entity->file['tmp_name'])) {
+                return false;
+            }
 
-        if (empty($entity->file['tmp_name'])) {
-            return false;
+            $entity->guid = Text::uuid();
+            $entity->timestamp = Time::now();
+
+            $full_image_name = 'pictures/' . $entity->guid . '.png';
+
+            if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
+                return false;
+            }
+
+            $thumbnail_name = 'pictures/' . $entity->guid . '_thumb.png';
+
+            $this->scale($full_image_name, $thumbnail_name);
+
+            return true;
         }
-
-        $entity->guid = Text::uuid();
-        $entity->date = Time::now();
-
-        $full_image_name = 'pictures/' . $entity->guid . '.png';
-
-        if (!imagepng(imagecreatefromstring(file_get_contents($entity->file['tmp_name'])), $full_image_name)) {
-            return false;
-        }
-
-        $thumbnail_name = 'pictures/' . $entity->guid . '_thumb.png';
-
-        $this->scale($full_image_name, $thumbnail_name);
-
-        return true;
     }
 
     private function scale($filename, $save_path) {
@@ -119,37 +120,6 @@ class PicturesTable extends Table {
         return imagepng($image_p, $save_path, 0);
     }
 
-    public function viewWithStatus($id) {
-
-        if (!isset($id)) {
-            return false;
-        }
-
-        $query = $this
-                ->find()
-                ->contain(['Users', 'Marks', 'PictureComments.Users', 'Votes'])
-                ->where(['Pictures.id' => $id])
-                ->first();
-
-        $now = Time::parse('now');
-
-        if ($query->hunt->start_date <= $now && $query->hunt->end_date >= $now) {
-            $query->hunt->open = true;
-            $query->hunt->status = "Hunt Open";
-        } else {
-            $query->hunt->open = false;
-        }
-
-        if ($query->hunt->voting_start_date <= $now && $query->hunt->voting_end_date >= $now) {
-            $query->hunt->voting_open = true;
-            $query->hunt->status = "Voting Open";
-        } else {
-            $query->hunt->voting_open = false;
-        }
-
-        return $query;
-    }
-
     public function deleteFiles($id) {
 
         if (!isset($id)) {
@@ -163,6 +133,120 @@ class PicturesTable extends Table {
             }
         }
 
+    }
+    
+    public function findByGame($id = null) {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts.Games', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Games.name' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Games.id' => $id]);
+            }
+
+        return $query;
+ 
+    }
+    
+    public function findByUser($id = null) {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Users','Marks.Hunts', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Users.username' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Users.id' => $id]);
+            }
+
+        return $query;
+ 
+    }
+
+    public function findByHunt($id = null) {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Hunts.name' => 'ASC']);
+            
+            if (isset($id)) {
+                $query->where(['Hunts.id' => $id]);
+            }
+                
+        return $query;
+ 
+    }
+    
+    public function findByMark($id = null) {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Marks.name' => 'ASC']);
+                
+            if (isset($id)) {
+                $query->where(['Marks.id' => $id]);
+            }
+            
+        return $query;
+ 
+    }
+    
+    public function findByDate() {
+        
+            $currentTime = Time::parse('now');
+            $now = $currentTime->i18nFormat('YYYY-MM-dd HH:mm:ss');
+
+            $query = $this->find()
+                ->contain(['Marks.Hunts', 'PictureComments.Users'])
+                ->where(['Hunts.voting_end_date <=' => $now])
+                ->order(['Pictures.timestamp' => 'DESC']);
+                
+        return $query;
+ 
+    }
+    
+    public function rankVotes($mid, $limit = null) {
+        $query = $this->find()
+            ->contain([
+                'Marks',
+                'Users' => function ($q) {
+                    return $q
+                    ->select(['id', 'username']);}])
+            ->where(['Marks.id' => $mid])
+            ->order(['Pictures.vote_count' => 'DESC', 'Pictures.id' => 'ASC'])
+            ->limit($limit);
+
+        return $query;
+    }
+    
+    public function tallyVotes($uid) {
+        $total = 0;
+        $query = $this->find()
+            ->where(['user_id' => $uid])
+            ->all();
+        
+        foreach($query as $pic) {
+            $total += $pic->vote_count;
+        }
+        
+        return $total;
     }
 
 }

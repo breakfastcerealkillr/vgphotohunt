@@ -16,7 +16,9 @@ class Game extends Entity
      */
     protected $_accessible = [
         'name' => true,
-        'sets' => true,
-        'enabled' =>true
+        'short_name' => true,
+        'description' => true,
+        'file' => true,
+        'pic_url' => true
     ];
 }
