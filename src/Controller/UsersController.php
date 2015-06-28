@@ -36,10 +36,10 @@ class UsersController extends AppController {
         $this->loadModel('Votes');
         $this->loadModel('PictureComments');
         $this->loadModel('NewsComments');
-        
+
         $user = $this->Users->get($id);
         $this->set('user', $user);
-        
+
         $this->set('latest', $this->Pictures->findByUser($id));
 
         // Aggregates, yay!
@@ -120,8 +120,9 @@ class UsersController extends AppController {
     }
 
     public function register() {
-        
+
         $this->loadComponent('Password');
+        $this->loadModel('Emails');
 
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
@@ -145,36 +146,39 @@ class UsersController extends AppController {
                 return;
             }
 
-            if ($this->Users->save($user)) {
-                $this->Flash->success('Registration Successful');
+            $result = $this->Users->save($user);
+            
+            if ($result) {
+                $this->Emails->welcome($result->id);
+                $this->Flash->success('Registration Successful. Please check your email for a verification URL.');
                 return $this->redirect('/');
             } else {
                 $this->Flash->error('The user could not be saved. Please, try again.');
             }
         }
     }
-    
+
     public function registered() {
         
     }
-    
+
     public function adminAdd() {
-		
-		$this->adminOnly();
-		
+
+        $this->adminOnly();
+
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success('The user has been saved.');
-                return $this->redirect(['controller' => 'Admin' ,'action' => 'users']);
+                return $this->redirect(['controller' => 'Admin', 'action' => 'users']);
             } else {
                 $this->Flash->error('The user could not be saved. Please, try again.');
             }
         }
     }
-    
+
     public function adminEdit($id) {
 
         $this->adminOnly();
@@ -190,14 +194,13 @@ class UsersController extends AppController {
             }
         }
         $this->set('user', $user);
-        
     }
-    
-    public function adminDelete($id = null) {
-        
-		$this->adminOnly();
 
-  
+    public function adminDelete($id = null) {
+
+        $this->adminOnly();
+
+
         $user = $this->Users->get($id);
 
         $user->enabled = 0;
@@ -209,9 +212,8 @@ class UsersController extends AppController {
         }
 
         return $this->redirect($this->referer());
-        
     }
-    
+
     public function deleteAvatar() {
 
         $user = $this->Users->get($this->user_id);
@@ -231,8 +233,24 @@ class UsersController extends AppController {
 
         return $this->redirect($this->referer());
     }
-    
-    public function forgotPass() {
-    //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp
+
+    public function verify($token) {
+
+        if (!isset($token)) {
+            $this->redirect('/');
+        }
+
+        if ($this->Users->verify($token)) {
+            $this->Flash->success('Account Verified! You may do fancy things now.');
+        } else {
+            $this->Flash->error('Error!');
+        }
+
+        return $this->redirect($this->referer());
     }
+
+    public function forgotPass() {
+        //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp
+    }
+
 }

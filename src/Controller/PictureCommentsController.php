@@ -17,16 +17,24 @@ class PictureCommentsController extends AppController {
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        if($this->user_id == $this->request->data['user_id']) {
-        $pictureComment = $this->PictureComments->newEntity();
-        if ($this->request->is('post')) {
-            $pictureComment = $this->PictureComments->patchEntity($pictureComment, $this->request->data);
-            if ($this->PictureComments->save($pictureComment)) {
-                $this->Flash->success('The picture comment has been saved.');
-            } else {
-                $this->Flash->error('The picture comment could not be saved. Please, try again.');
-            }
+
+        $this->loadModel('Users');
+
+        if (!$this->Users->isVerified($this->user_id)) {
+            $this->Flash->error('Please verify your email before commenting.');
+            return $this->redirect($this->referer());
         }
+
+        if ($this->user_id == $this->request->data['user_id']) {
+            $pictureComment = $this->PictureComments->newEntity();
+            if ($this->request->is('post')) {
+                $pictureComment = $this->PictureComments->patchEntity($pictureComment, $this->request->data);
+                if ($this->PictureComments->save($pictureComment)) {
+                    $this->Flash->success('The picture comment has been saved.');
+                } else {
+                    $this->Flash->error('The picture comment could not be saved. Please, try again.');
+                }
+            }
         }
 
         return $this->redirect($this->referer());
@@ -75,10 +83,10 @@ class PictureCommentsController extends AppController {
         }
         return $this->redirect(['action' => 'index']);
     }
-    
+
     public function adminAdd() {
-        
-	$this->adminOnly();
+
+        $this->adminOnly();
 
         $pc = $this->PictureComments->newEntity();
 
@@ -86,19 +94,19 @@ class PictureCommentsController extends AppController {
             $pc = $this->PictureComments->patchEntity($pc, $this->request->data);
             if ($this->PictureComments->save($pc)) {
                 $this->Flash->success('The comment has been saved.');
-                return $this->redirect(['controller' => 'Admin' ,'action' => 'PictureComments']);
+                return $this->redirect(['controller' => 'Admin', 'action' => 'PictureComments']);
             } else {
                 $this->Flash->error('The comment could not be saved. Please, try again.');
             }
         }
-        
+
         $this->set('pictures', $this->PictureComments->Pictures->find('list'));
         $this->set('users', $this->PictureComments->Users->find('list'));
     }
-    
+
     public function adminEdit($id = null) {
-        
-		$this->adminOnly();
+
+        $this->adminOnly();
 
         $pictureComment = $this->PictureComments->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -110,14 +118,14 @@ class PictureCommentsController extends AppController {
                 $this->Flash->error('The comment could not be saved. Please, try again.');
             }
         }
-		
+
         $this->set('pictureComment', $pictureComment);
-		$this->set('pictures', $this->PictureComments->Pictures->find('list'));
+        $this->set('pictures', $this->PictureComments->Pictures->find('list'));
     }
-    
+
     public function adminDelete($id = null) {
-        
-		$this->adminOnly();
+
+        $this->adminOnly();
 
         $entity = $this->PictureComments->get($id);
         if ($this->PictureComments->delete($entity)) {
@@ -126,6 +134,7 @@ class PictureCommentsController extends AppController {
             $this->Flash->error('Failed!');
         }
 
-        return $this->redirect($this->referer());    
+        return $this->redirect($this->referer());
     }
+
 }
