@@ -4,7 +4,6 @@
 /vendor
 /plugins/*
 .htaccess
-composer.lock
 index.php
 
 nbproject/private/config.properties
@@ -15,3 +14,4 @@ nbproject/project.xml
 *.db
 *.htaccess
 webroot/.htaccess
+/nbproject/private/
