@@ -59,6 +59,11 @@ class UsersController extends AppController {
      */
     public function edit($id = null) {
 
+        if (!$this->Users->isVerified($this->user_id)) {
+            $this->Flash->error('Please verify your email editing your profile.');
+            return $this->redirect($this->referer());
+        }
+
         if ($id != $this->user_id) {
             return $this->redirect([$this->user_id]);
         }
@@ -147,7 +152,7 @@ class UsersController extends AppController {
             }
 
             $result = $this->Users->save($user);
-            
+
             if ($result) {
                 $this->Emails->welcome($result->id);
                 $this->Flash->success('Registration Successful. Please check your email for a verification URL.');
