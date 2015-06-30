@@ -92,9 +92,13 @@ class UsersTable extends Table {
     }
 
     public function beforeSave($event, $entity) {
-
         if ($entity->isNew()) {
             $entity->confirmation_token = rand(100000000000000, 999999999999999);
+        }
+        
+        if ($entity->dirty('email')) {
+            $entity->confirmation_token = rand(100000000000000, 999999999999999);
+            $entity->verified = false;
         }
 
         if (!empty($entity->file['name'])) {

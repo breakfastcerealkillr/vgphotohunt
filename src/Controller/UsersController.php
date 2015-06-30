@@ -59,20 +59,27 @@ class UsersController extends AppController {
      */
     public function edit($id = null) {
 
-        if (!$this->Users->isVerified($this->user_id)) {
-            $this->Flash->error('Please verify your email editing your profile.');
-            return $this->redirect($this->referer());
-        }
-
         if ($id != $this->user_id) {
             return $this->redirect([$this->user_id]);
         }
 
         $user = $this->Users->get($id);
+        
         if ($this->request->is(['patch', 'post', 'put'])) {
+            
+            if ($this->request->data['Users']['email'] !== $user->email) {
+                $email_changed = true;
+            }
+            
             $user = $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Flash->success('Saved!');
+            $save = $this->Users->save($user);
+
+            if ($save) {
+                if (isset($email_changed)) {
+                    $this->Flash->success('Saved! Please reconfirm your new email.');
+                } else {
+                    $this->Flash->success('Saved!');
+                }
                 return $this->redirect(['action' => 'view', $id]);
             } else {
                 $this->Flash->error('The user could not be saved. Please, try again.');
