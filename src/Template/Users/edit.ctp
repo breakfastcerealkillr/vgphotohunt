@@ -15,6 +15,10 @@
         <?= $this->Form->label('Users.current_portrait', 'Current Portrait'); ?>
         <?= $this->Form->select('Users.current_portrait', $awards, ['empty' => ['portrait1' => 'Default'], 'default' => $user->current_portrait]) ?>
         <?= $this->Form->input('Users.timezone', ['options' => Cake\I18n\Time::listTimezones(), 'default' => $user->timezone]) ?>
+        <?= $this->Form->input('Users.email', ['default' => $user->email]) ?>
+        <?php if (!$user->verified): ?>
+            <div class="alert alert-warning">Please Confirm Your Email Address!</div>
+        <?php endif; ?>
         <?= $this->Form->button('Save', ['class' => 'btn btn-success']) ?>
         <?= $this->Html->link('Cancel', ['action' => 'view', $user->id], ['class' => 'btn btn-default']) ?>
         <?= $this->Form->end() ?>

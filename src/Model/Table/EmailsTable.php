@@ -41,17 +41,54 @@ class EmailsTable extends Table {
 
         $user = $this->getUser($userId);
 
+        if (!$user) {
+            return false;
+        }
+
         $email = new Email();
         $email->transport('default')
                 ->from(['gm@vgphotohunt.com' => 'Game Master'])
                 ->to($user->email)
-                ->subject('Please Confirm Your Account')
+                ->subject('VGPhotohunt - Please Confirm Your Account')
                 ->template('welcome')
                 ->viewVars([
                     'token' => $user->confirmation_token,
                     'username' => $user->username
                 ])
                 ->send();
+
+        return true;
+    }
+
+    public function resetPass($email) {
+
+        if (!isset($email)) {
+            return false;
+        }
+
+        $users = TableRegistry::get('Users');
+
+        $user = $users->find()
+                ->where(['Users.email' => $email])
+                ->first();
+
+        if (!isset($user)) {
+            return false;
+        }
+
+        $msg = new Email();
+        $msg->transport('default')
+                ->from(['gm@vgphotohunt.com' => 'Game Master'])
+                ->to($user->email)
+                ->subject('VGPhotohunt - Reset Your Password')
+                ->template('resetPass')
+                ->viewVars([
+                    'token' => $user->confirmation_token,
+                    'username' => $user->username
+                ])
+                ->send();
+
+        return true;
     }
 
 }
