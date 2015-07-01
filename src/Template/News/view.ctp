@@ -28,12 +28,7 @@
         <?php endforeach; ?>
     <?php endif; ?>
     <?php if($loggedin == true): ?>
-        <?= $this->Form->create(null, ['url' => ['controller' => 'NewsComments', 'action' => 'add']]); ?>
-        <?= $this->Form->hidden('news_id', ['value' => $article->id]) ?>
-        <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
-        <?= $this->Form->input('comment') ?>
-        <?= $this->Form->button('Submit') ?>
-        <?= $this->Form->end() ?>
+    <?= $this->element('addComment', ['article' => $article]) ; ?>
     <?php endif; ?>
 </div>
 </div>
