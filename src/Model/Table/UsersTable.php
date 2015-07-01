@@ -9,7 +9,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Text;
-use Cake\ORM\TableRegistry;
 use Cake\I18n\Time;
 
 /**
@@ -104,8 +103,6 @@ class UsersTable extends Table {
         if ($entity->dirty('email')) {
             $entity->confirmation_token = $this->generateToken();
             $entity->verified = false;
-            $email = TableRegistry::get('Emails');
-            $email->welcome($entity->id);
         }
 
         if (!empty($entity->file['name'])) {

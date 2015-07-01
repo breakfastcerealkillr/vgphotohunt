@@ -76,6 +76,8 @@ class UsersController extends AppController {
 
             if ($save) {
                 if (isset($email_changed)) {
+                    $this->loadModel('Emails');
+                    $this->Emails->welcome($user->id);
                     $this->Flash->success('Saved! Please reconfirm your new email.');
                 } else {
                     $this->Flash->success('Saved!');
