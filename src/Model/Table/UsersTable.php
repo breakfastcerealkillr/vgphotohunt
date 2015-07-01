@@ -103,6 +103,8 @@ class UsersTable extends Table {
         if ($entity->dirty('email')) {
             $entity->confirmation_token = $this->generateToken();
             $entity->verified = false;
+            $email = TableRegistry::get('Emails');
+            $email->welcome($entity->id);
         }
 
         if (!empty($entity->file['name'])) {
