@@ -9,6 +9,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Text;
+use Cake\ORM\TableRegistry;
 use Cake\I18n\Time;
 
 /**
