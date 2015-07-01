@@ -64,13 +64,13 @@ class UsersController extends AppController {
         }
 
         $user = $this->Users->get($id);
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            
+
             if ($this->request->data['Users']['email'] !== $user->email) {
                 $email_changed = true;
             }
-            
+
             $user = $this->Users->patchEntity($user, $this->request->data);
             $save = $this->Users->save($user);
 
@@ -262,7 +262,67 @@ class UsersController extends AppController {
     }
 
     public function forgotPass() {
-        //http://ceda.splavy.com/clanky/reset-lost-passwords-in-cakephp
+
+        if ($this->request->is('post')) {
+
+            $this->loadModel('Emails');
+            if ($this->Emails->resetPass($this->request->data['email'])) {
+                $this->Flash->success('Please check your email for your reset link.');
+            } else {
+                $this->Flash->error('Email address not found');
+            }
+            return $this->redirect($this->referer());
+        }
+    }
+
+    public function resetPass($token) {
+
+        $this->loadComponent('Password');
+
+        if (!isset($token)) {
+            return $this->redirect('/');
+        }
+
+        $user = $this->Users->findByToken($token);
+
+        if (!isset($user)) {
+            $this->Flash->error('Sorry, this token is invalid. Please reset your password again.');
+            return $this->redirect('/');
+        }
+
+        $this->set('user', $user);
+
+        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->data);
+
+            /*
+             * I was going to use Cake's built in validation system to authenticate
+             * the password form (with repeat password), but became quickly frustrated with it
+             * and the lack of documentation. Here's a system I implemented on a 
+             * Cake 2 build. Hopefully this goes away in the future. -EH
+             */
+            if (!empty($this->request->data['Users']['password']) && !empty($this->request->data['Users']['password_confirm'])) {
+                $pass_validate = $this->Password->validate($this->request->data['Users']['password'], $this->request->data['Users']['password_confirm']);
+            } else {
+                $this->Flash->error("Please Fill Out the Entire Form");
+                return;
+            }
+
+            if ($pass_validate != "OK") {
+                $this->Flash->error($pass_validate);
+                return;
+            }
+
+            $result = $this->Users->save($user);
+
+            if ($result) {
+                $this->Flash->success('Password reset. Please log in with your new password.');
+            } else {
+                $this->Flash->error('Error Resetting Password. Plz try again.');
+                return $this->redirect($this->referer());
+            }
+            return $this->redirect('/');
+        }
     }
 
 }

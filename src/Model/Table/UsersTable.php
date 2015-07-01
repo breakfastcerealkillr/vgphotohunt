@@ -16,6 +16,10 @@ use Cake\I18n\Time;
  */
 class UsersTable extends Table {
 
+    private function generateToken() {
+        return rand(100000000000000, 999999999999999);
+    }
+
     /**
      * Initialize method
      *
@@ -93,11 +97,11 @@ class UsersTable extends Table {
 
     public function beforeSave($event, $entity) {
         if ($entity->isNew()) {
-            $entity->confirmation_token = rand(100000000000000, 999999999999999);
+            $entity->confirmation_token = $this->generateToken();
         }
-        
+
         if ($entity->dirty('email')) {
-            $entity->confirmation_token = rand(100000000000000, 999999999999999);
+            $entity->confirmation_token = $this->generateToken();
             $entity->verified = false;
         }
 
@@ -275,6 +279,19 @@ class UsersTable extends Table {
         }
 
         return true;
+    }
+
+    public function findByToken($token) {
+
+        if (!isset($token)) {
+            return false;
+        }
+
+        $user = $this->find()
+                ->where(['Users.confirmation_token' => $token])
+                ->first();
+
+        return $user;
     }
 
 }
