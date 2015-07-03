@@ -22,6 +22,18 @@ class PictureCommentsController extends AppController {
         if ($this->request->is('post')) {
             $pictureComment = $this->PictureComments->patchEntity($pictureComment, $this->request->data);
             if ($this->PictureComments->save($pictureComment)) {
+                //Get a query of the related picture, mark, and hunt
+                $this->loadModel('Pictures');
+                $query = $this->Pictures->get($pictureComment->picture_id, [
+                    'contain' => ['Marks.Hunts']
+                ]);
+                
+                //Check to make sure the user can't give themselves notifications
+                if ($this->user_id != $query->user_id) {
+                    $this->loadModel('Notifications');
+                    $this->Notifications->add($query->user_id,'huntcomment',$query->mark->hunt->id, $query->mark->name);
+                }
+                
                 $this->Flash->success('The picture comment has been saved.');
             } else {
                 $this->Flash->error('The picture comment could not be saved. Please, try again.');

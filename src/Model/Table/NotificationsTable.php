@@ -26,6 +26,7 @@ class NotificationsTable extends Table
         $this->table('notifications');
         $this->displayField('id');
         $this->primaryKey('id');
+        $this->belongsTo('Users', ['foreignKey' => 'user_id']);
     }
 
     /**
@@ -39,10 +40,12 @@ class NotificationsTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create')
-            ->requirePresence('type', 'create')
-            ->notEmpty('type')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
+            ->requirePresence('user_id', 'create')
+            ->notEmpty('user_id')
+            ->requirePresence('text', 'create')
+            ->notEmpty('text')
+            ->requirePresence('url', 'create')
+            ->notEmpty('url');
         return $validator;
     }
 
@@ -52,42 +55,39 @@ class NotificationsTable extends Table
     
     public function add($uid, $type, $object, $markName = null) {
         
-        $notification = $this->Notifications->newEntity();
+        $notification = $this->newEntity();
         
         $notification->user_id = $uid;
         
         if ($type == "levelup") {
-            $notification->url = "/users/edit/" . $object;
+            $notification->url = "users/edit/" . $object;
             $notification->text = "You've leveled up! Check out your new portrait here.";
             
         }
-        elseif (type == "huntcomment") {
-            $notification->url = "/hunts/view/" . $object;
+        elseif ($type == "huntcomment") {
+            $notification->url = "hunts/view/" . $object;
             $notification->text = "A user commented on your submission of " . $markName . ".";
         }
-        elseif (type == "newspost") {
-            $notification->url = "/news/view/" . $object;
-            $notification->text = "Announcement coming through. Check it out.";
+        elseif ($type == "newspost") {
+            $notification->url = "news/view/" . $object;
+            $notification->text = "Hey. A news post just went up. Check it out.";
         }
-        elseif (type == "markwin") {
-            $notification->url = "/hunts/view/" . $object;
+        elseif ($type == "markwin") {
+            $notification->url = "hunts/view/" . $object;
             $notification->text = "You won the mark '" . $markName . "'. Grats!";
         }
         
-        if ($this->Notifications->save($notification)) {
+        if ($this->save($notification)) {
             return true;
         } else {
             return false;
         }    
     }
     
-    public function countUnread($uid) {
-        
+    public function findUnread($uid) {
         $query = $this->find()
                 ->where(['user_id' => $uid, 'is_read' => 0]);
-        $count = $query->count;
-        return $count;
-        
+        return $query;
     }
 
 }

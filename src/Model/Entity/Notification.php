@@ -18,6 +18,7 @@ class Notification extends Entity
         'user_id' => true,
         'url' => true,
         'text' => true,
-        'is_read' => true
+        'is_read' => true,
+        'timestamp' => true
     ];
 }

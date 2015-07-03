@@ -25,6 +25,16 @@ class NewsController extends AppController {
         if ($this->request->is('post')) {
             $news = $this->News->patchEntity($news, $this->request->data);
             if ($this->News->save($news)) {
+                
+                // Get a list of all users
+                $this->loadModel('Users');
+                $query = $this->Users->find('all');
+                
+                //Give them each a notification!
+                foreach($query as $entity) {
+                    $this->Notifications->add($entity->id,'newspost',$news->id);
+                }
+                
                 $this->Flash->success('The news has been saved.');
                 return $this->redirect(['controller' => 'Admin' ,'action' => 'news']);
             } else {

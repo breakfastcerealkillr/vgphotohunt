@@ -197,6 +197,7 @@ class MarksTable extends Table
                 }
                 // Now give the winners XP, levels, awards, all that jazz.
                 if($this->Pictures->Users->addXp($topPic->user_id, 20) > 0) {
+                    $this->Pictures->Users->Notifications->add($topPic->user_id,'markwin',$topPic->mark->hunt_id, $topPic->mark->name);
                     $out .= $topPic->user->username . ' got XP. <br />';
                 }
                 else {
