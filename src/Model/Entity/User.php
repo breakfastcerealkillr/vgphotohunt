@@ -40,7 +40,8 @@ class User extends Entity {
         'xp' => true,
         'level' => true,
         'next_level' => true,
-        'current_portrait' => true
+        'current_portrait' => true,
+        'verfied' => true
     ];
 
     protected function _setPassword($password) {

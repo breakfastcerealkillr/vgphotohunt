@@ -16,6 +16,10 @@ use Cake\I18n\Time;
  */
 class UsersTable extends Table {
 
+    private function generateToken() {
+        return rand(100000000000000, 999999999999999);
+    }
+
     /**
      * Initialize method
      *
@@ -78,15 +82,23 @@ class UsersTable extends Table {
         return $query;
     }
 
-     public function beforeMarshal(Event $event, \ArrayObject $data) {
+    public function beforeMarshal(Event $event, \ArrayObject $data) {
         if (isset($data['password'])) {
             if (empty($data['password'])) {
                 unset($data['password']);
             }
         }
-     }
-     
+    }
+
     public function beforeSave($event, $entity) {
+        if ($entity->isNew()) {
+            $entity->confirmation_token = $this->generateToken();
+        }
+
+        if ($entity->dirty('email')) {
+            $entity->confirmation_token = $this->generateToken();
+            $entity->verified = false;
+        }
 
         if (!empty($entity->file['name'])) {
             if ($entity->avatar != null) {
@@ -157,93 +169,132 @@ class UsersTable extends Table {
             return false;
         }
     }
-    
+
     public function addXP($user_id, $amount) {
-        
+
         $user = $this->get($user_id);
-        
+
         $user->xp += $amount;
-        
-        
+
+
         $leveled = $this->checkLevel($user);
         if ($this->save($user)) {
             return $leveled + 1;
         } else {
             return false;
         }
-        
     }
-    
+
     //Dirty hard values in lieu of another table or something. No one's gonna hit lv11 anyway!
     public function checkLevel($user) {
-        if($user->level == 1 && $user->xp > 104) {
+        if ($user->level == 1 && $user->xp > 104) {
             $user->level += 1;
             $user->next_level = 174;
             $user->xp -= 104;
             $this->Awards->addAward($user->id, 5);
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 2 && $user->xp > 174) {
+        } elseif ($user->level == 2 && $user->xp > 174) {
             $user->level += 1;
             $user->next_level = 284;
             $user->xp -= 174;
             $this->Awards->addAward($user->id, 6);
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 3 && $user->xp > 284) {
+        } elseif ($user->level == 3 && $user->xp > 284) {
             $user->level += 1;
             $user->next_level = 436;
             $user->xp -= 284;
             $this->Awards->addAward($user->id, 7);
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 4 && $user->xp > 436) {
+        } elseif ($user->level == 4 && $user->xp > 436) {
             $user->level += 1;
             $user->next_level = 633;
             $user->xp -= 436;
             $this->Awards->addAward($user->id, 8);
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 5 && $user->xp > 633) {
+        } elseif ($user->level == 5 && $user->xp > 633) {
             $user->level += 1;
             $user->next_level = 878;
             $user->xp -= 633;
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 6 && $user->xp > 878) {
+        } elseif ($user->level == 6 && $user->xp > 878) {
             $user->level += 1;
             $user->next_level = 1174;
             $user->xp -= 878;
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 7 && $user->xp > 1174) {
+        } elseif ($user->level == 7 && $user->xp > 1174) {
             $user->level += 1;
             $user->next_level = 1524;
             $user->xp -= 1174;
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 8 && $user->xp > 1524) {
+        } elseif ($user->level == 8 && $user->xp > 1524) {
             $user->level += 1;
             $user->next_level = 1931;
             $user->xp -= 1524;
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
-        }
-        elseif($user->level == 9 && $user->xp > 1931) {
+        } elseif ($user->level == 9 && $user->xp > 1931) {
             $user->level += 1;
             $user->next_level = 5000;
             $user->xp -= 1931;
             $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
+        } else {
+            return 0;
         }
-        else {return 0;}
+    }
+
+    public function verify($token) {
+
+        if (!isset($token)) {
+            return false;
+        }
+
+        $user = $this->find()
+                ->where(['Users.confirmation_token' => $token])
+                ->first();
+
+        $user->verified = true;
+
+        if (!$this->save($user)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isVerified($id) {
+
+        if (!isset($id)) {
+            return false;
+        }
+
+        $user = $this->get($id);
+
+        if (!$user->verified) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function findByToken($token) {
+
+        if (!isset($token)) {
+            return false;
+        }
+
+        $user = $this->find()
+                ->where(['Users.confirmation_token' => $token])
+                ->first();
+
+        return $user;
     }
 
 }

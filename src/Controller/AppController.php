@@ -74,7 +74,15 @@ class AppController extends Controller {
     public function beforeFilter(\Cake\Event\Event $event) {
         parent::beforeFilter($event);
 
-        $this->Auth->allow(['index', 'view', 'dashboard', 'register']);
+        $this->Auth->allow([
+            'index',
+            'view',
+            'dashboard', 
+            'register', 
+            'verify', 
+            'forgotPass',
+            'resetPass'
+            ]);
 
         $userdata = $this->Auth->user();
         $this->user_id = $userdata['id'];

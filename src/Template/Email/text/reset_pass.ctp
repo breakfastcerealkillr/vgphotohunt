@@ -1,0 +1,1 @@
+Hi <?= $username ?>. Please reset your password by clicking the following link: https://vgphotohunt.com/users/resetPass/<?= $token ?>
