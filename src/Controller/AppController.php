@@ -88,7 +88,7 @@ class AppController extends Controller {
         $this->user_id = $userdata['id'];
         // Temporary way to break data away from auth cache and update. Running every page = bad, though....
         $this->loadModel('Users');
-        
+        $this->loadModel('Notifications');
         if (!empty($userdata)) {
             $user = $this->Users->get($userdata['id']);
             $this->set('user_id', $user->id);
@@ -99,6 +99,7 @@ class AppController extends Controller {
             $this->set('current_portrait', $user->current_portrait);
             $this->set('level', $user->level);
             $this->set('current_user', $user);
+            $this->set('unread', $this->Notifications->findUnread($user->id)->count());
         } else {
             $this->set('loggedin', false);
             $this->set('username', false);

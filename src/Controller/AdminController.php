@@ -183,4 +183,14 @@ class AdminController extends AppController {
 
         $this->set('suggestions', $this->paginate('Suggestions'));
     }
+    
+    public function notifications() {
+
+        $this->paginate = [
+            'contain' => ['Users'],
+            'order' => ['Notifications.id' => 'DESC']
+        ];
+
+        $this->set('notifications', $this->paginate('Notifications'));
+    }
 }

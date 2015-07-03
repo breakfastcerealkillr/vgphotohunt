@@ -70,6 +70,7 @@ $cakeDescription = 'VG Photo Hunt';
         <div class="portrait-container">
             <div class="text-right" style="display: inline-block; margin-right: 10px;">
                 <p style="font-size: 20pt;"><?= $this->Html->link($username,['controller' => 'Users', 'action' => 'view', $user_id], ['class' => 'header-text']); ?></p>
+                <p><?php if ($unread > 0) {echo '<span class="badge">'. $this->Html->link($unread,['controller' => 'Notifications', 'action' => 'index']) . '</span> ';}?><?= $this->Html->link('Notifications',['controller' => 'Notifications', 'action' => 'index'], ['class' => 'header-text']); ?></p>
                 <p><?= $this->Html->link('Log Out',['controller' => 'Users', 'action' => 'logout'], ['class' => 'header-text']); ?></p>
             </div>
             <div class="portrait-bg" style="background-image: url(<?= $this->request->base ?>/../portraits/<?= $current_user->current_portrait ?>.png);">

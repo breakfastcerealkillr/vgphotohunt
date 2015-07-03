@@ -17,12 +17,36 @@ class PictureCommentsController extends AppController {
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function add() {
+<<<<<<< HEAD
+        if($this->user_id == $this->request->data['user_id']) {
+        $pictureComment = $this->PictureComments->newEntity();
+        if ($this->request->is('post')) {
+            $pictureComment = $this->PictureComments->patchEntity($pictureComment, $this->request->data);
+            if ($this->PictureComments->save($pictureComment)) {
+                //Get a query of the related picture, mark, and hunt
+                $this->loadModel('Pictures');
+                $query = $this->Pictures->get($pictureComment->picture_id, [
+                    'contain' => ['Marks.Hunts']
+                ]);
+                
+                //Check to make sure the user can't give themselves notifications
+                if ($this->user_id != $query->user_id) {
+                    $this->loadModel('Notifications');
+                    $this->Notifications->add($query->user_id,'huntcomment',$query->mark->hunt->id, $query->mark->name);
+                }
+                
+                $this->Flash->success('The picture comment has been saved.');
+            } else {
+                $this->Flash->error('The picture comment could not be saved. Please, try again.');
+            }
+=======
 
         $this->loadModel('Users');
 
         if (!$this->Users->isVerified($this->user_id)) {
             $this->Flash->error('Please verify your email before commenting.');
             return $this->redirect($this->referer());
+>>>>>>> master
         }
 
         if ($this->user_id == $this->request->data['user_id']) {

@@ -21,14 +21,7 @@
                                    <?php endforeach; ?>
                                <?php endif; ?>
                                <?php if($loggedin == true): ?>
-                               <div class="col-md-4 col-centered" style="min-width: 300px;">
-                                   <?= $this->Form->create(null, ['url' => ['controller' => 'PictureComments', 'action' => 'add']]); ?>
-                                   <?= $this->Form->hidden('picture_id', ['value' => $mpic->id]) ?>
-                                   <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
-                                   <?= $this->Form->input('comment') ?>
-                                   <?= $this->Form->button('Submit') ?>
-                                   <?= $this->Form->end() ?>
-                               </div>
+                               <?= $this->element('addComment', ['mpic' => $mpic]) ; ?>
                                <?php endif; ?>
                        </div>
                        <?php $i += 1; ?>

@@ -30,16 +30,11 @@ class UsersTable extends Table {
         $this->table('users');
         $this->displayField('username');
         $this->primaryKey('id');
-        $this->hasMany('PictureComments', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Pictures', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Votes', [
-            'foreignKey' => 'user_id'
-        ]);
+        $this->hasMany('PictureComments', ['foreignKey' => 'user_id']);
+        $this->hasMany('Pictures', ['foreignKey' => 'user_id']);
+        $this->hasMany('Votes', ['foreignKey' => 'user_id']);
         $this->hasMany('Awards', ['foreignKey' => 'user_id']);
+        $this->hasMany('Notifications', ['foreignKey' => 'user_id']);
     }
 
     /**
@@ -197,50 +192,58 @@ class UsersTable extends Table {
             $user->next_level = 174;
             $user->xp -= 104;
             $this->Awards->addAward($user->id, 5);
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 2 && $user->xp > 174) {
             $user->level += 1;
             $user->next_level = 284;
             $user->xp -= 174;
             $this->Awards->addAward($user->id, 6);
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 3 && $user->xp > 284) {
             $user->level += 1;
             $user->next_level = 436;
             $user->xp -= 284;
             $this->Awards->addAward($user->id, 7);
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 4 && $user->xp > 436) {
             $user->level += 1;
             $user->next_level = 633;
             $user->xp -= 436;
             $this->Awards->addAward($user->id, 8);
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 5 && $user->xp > 633) {
             $user->level += 1;
             $user->next_level = 878;
             $user->xp -= 633;
-            $this->Awards->addAward($user->id, 5);
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 6 && $user->xp > 878) {
             $user->level += 1;
             $user->next_level = 1174;
             $user->xp -= 878;
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 7 && $user->xp > 1174) {
             $user->level += 1;
             $user->next_level = 1524;
             $user->xp -= 1174;
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 8 && $user->xp > 1524) {
             $user->level += 1;
             $user->next_level = 1931;
             $user->xp -= 1524;
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } elseif ($user->level == 9 && $user->xp > 1931) {
             $user->level += 1;
             $user->next_level = 5000;
             $user->xp -= 1931;
+            $this->Notifications->add($user->id,'levelup',$user->id);
             return 1;
         } else {
             return 0;

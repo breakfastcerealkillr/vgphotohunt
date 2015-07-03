@@ -28,12 +28,14 @@
         <?php endforeach; ?>
     <?php endif; ?>
     <?php if($loggedin == true): ?>
-        <?= $this->Form->create(null, ['url' => ['controller' => 'NewsComments', 'action' => 'add']]); ?>
-        <?= $this->Form->hidden('news_id', ['value' => $article->id]) ?>
-        <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
-        <?= $this->Form->input('comment') ?>
-        <?= $this->Form->button('Submit') ?>
-        <?= $this->Form->end() ?>
+        <div class="col-md-4 col-centered" style="min-width: 300px;">
+           <?= $this->Form->create(null, ['url' => ['controller' => 'newsComments', 'action' => 'add']]); ?>
+           <?= $this->Form->hidden('news_id', ['value' => $article->id]) ?>
+           <?= $this->Form->hidden('user_id', ['value' => $user_id]) ?>
+           <?= $this->Form->input('comment', ['autocomplete' => 'off']) ?>
+           <?= $this->Form->button('Submit') ?>
+           <?= $this->Form->end() ?>
+       </div>
     <?php endif; ?>
 </div>
 </div>

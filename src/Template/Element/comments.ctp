@@ -7,13 +7,13 @@
                 </div>
                 <?php else: ?>
                 <div class="avatar-bg" style="background-image: url(<?= $this->request->base . '/../avatars/default.png'; ?>)">
-                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $user_id], 'style' => 'width: 100%; height: 100%;']); ?>
+                    <?= $this->Html->image($this->request->base . '/../img/blank.png', ['url' => ['controller' => 'Users', 'action' => 'view', $comment->user->id], 'style' => 'width: 100%; height: 100%;', 'title' => $comment->user->username]); ?>
                 </div>
                 <?php endif; ?>
                   
               </div>
               <div class="media-body">
                   <p><?= $comment->comment?></p>
-                  <p class="small-text"><?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
+                  <p class="small-text"><?= $this->Html->link($comment->user->username, ['controller' => 'Users', 'action' => 'view', $comment->user->id]) ?> - <?= $this->Time->format($comment->timestamp, 'M/d/Y h:mm a' , 'Unavailable', $timezone) ?></p>
               </div>
             </div>
